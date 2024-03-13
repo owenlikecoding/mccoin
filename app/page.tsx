@@ -19,16 +19,10 @@ export default function Component() {
         <nav className="ml-auto flex gap-4 sm:gap-6">
           {/* Use Tailwind CSS for styling links */}
           <Link href="#" className="text-sm font-medium hover:text-opacity-75">
-            Features
+            Sign Up
           </Link>
           <Link href="#" className="text-sm font-medium hover:text-opacity-75">
-            Pricing
-          </Link>
-          <Link href="#" className="text-sm font-medium hover:text-opacity-75">
-            About
-          </Link>
-          <Link href="#" className="text-sm font-medium hover:text-opacity-75">
-            Contact
+            Log In
           </Link>
         </nav>
       </header>
@@ -62,12 +56,9 @@ export default function Component() {
             © 2024 McCoin Inc. All rights reserved.
           </p>
           <nav className="flex gap-4 mt-4 sm:mt-0">
-            <Link href="#" className="text-xs hover:text-opacity-75">
+            <Link href="/tos" className="text-xs hover:text-opacity-75">
               Terms of Service
-            </Link>
-            <Link href="#" className="text-xs hover:text-opacity-75">
-              Privacy
-            </Link>
+            </Link> 
           </nav>
         </div>
       </footer>
