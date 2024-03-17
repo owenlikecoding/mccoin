@@ -14,7 +14,7 @@ export default function Component() {
       <header className="px-4 lg:px-6 h-14 flex items-center">
         <Link href="#" className="flex items-center justify-center">
           <MountainIcon className="h-6 w-6" aria-hidden="true" />
-          <span className="sr-only">McCoin Inc</span>
+          <span className="sr-only">McCoin Inc 1.0</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
           {/* Use Tailwind CSS for styling links */}
@@ -45,7 +45,7 @@ export default function Component() {
               </div>
             </div>
             <form className="w-full max-w-md flex flex-col md:flex-row gap-4 justify-center items-center">
-              <Button type="submit">Get Started</Button>
+              <Link href="/dashboard"><Button type="submit">Get Started</Button></Link>
             </form>
           </div>
         </section>

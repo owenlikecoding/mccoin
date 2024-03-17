@@ -6,6 +6,8 @@ import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
+interface MountainIconProps extends React.SVGProps<SVGSVGElement> {}
+
 export function mccoin() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
@@ -127,7 +129,7 @@ export function mccoin() {
 }
 
 
-function MountainIcon(props) {
+function MountainIcon(props: MountainIconProps) {
   return (
     <svg
       {...props}
