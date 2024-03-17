@@ -4,15 +4,12 @@ import Link from "next/link";
 import { useState } from "react";
 import {
   getAuth,
-  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import Cookies from "js-cookie";
-
-interface MountainIconProps extends React.SVGProps<SVGSVGElement> {}
-interface error extends Error {}
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXn34NBurMAMvApEOTrASF_JxEm5dEkDY",
@@ -49,34 +46,27 @@ export default function Component() {
     }
   };
 
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignUp = async (
+  const handleSignIn = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
     try {
       const auth = getAuth();
-      const userCredential = await createUserWithEmailAndPassword(
+      const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-      alert("Account created successfully");
+      alert("Signed in successfully");
       Cookies.set("uid", userCredential.user.uid);
       window.location.href = "/dashboard";
-      
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error);
-        alert("Error creating account: " + error.message);
+        alert("Error signing in: " + error.message);
       }
     }
   };
@@ -86,27 +76,10 @@ export default function Component() {
       <div className="max-w-lg w-full bg-gray-800 rounded-lg shadow-2xl overflow-hidden p-8">
         <div className="text-center mb-8">
           <span className="text-2xl font-semibold text-gray-100 block">
-            Create a McCoin Account
+            Sign In to McCoin
           </span>
         </div>
-        <form onSubmit={handleSignUp} className="space-y-6">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-400"
-            >
-              Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              placeholder="Enter your name"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full p-3 mt-2 border rounded-md bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
+        <form onSubmit={handleSignIn} className="space-y-6">
           <div>
             <label
               htmlFor="email"
@@ -142,28 +115,11 @@ export default function Component() {
             />
           </div>
           <div>
-            <label
-              htmlFor="confirm-password"
-              className="block text-sm font-medium text-gray-400"
-            >
-              Confirm Password
-            </label>
-            <input
-              id="confirm-password"
-              type="password"
-              placeholder="Confirm Password"
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full p-3 mt-2 border rounded-md bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          <div>
             <button
               type="submit"
               className="w-full py-3 mt-4 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              Sign Up
+              Sign In
             </button>
             <button
               onClick={handleGoogleSignIn}

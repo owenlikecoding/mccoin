@@ -32,7 +32,27 @@ import { ResponsiveLine } from "@nivo/line";
 import { ResponsivePie } from "@nivo/pie";
 import { Dice1, Dice5, Dice6, MountainIcon } from "lucide-react";
 
+import { initializeApp } from "firebase/app";
+import {getDatabase, ref, set} from "firebase/database";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBXn34NBurMAMvApEOTrASF_JxEm5dEkDY",
+  authDomain: "owen-bucks-evolved.firebaseapp.com",
+  databaseURL: "https://owen-bucks-evolved-default-rtdb.firebaseio.com",
+  projectId: "owen-bucks-evolved",
+  storageBucket: "owen-bucks-evolved.appspot.com",
+  messagingSenderId: "78917635267",
+  appId: "1:78917635267:web:e5aa6f89987f9e38326676",
+  measurementId: "G-JG7NGCN5P1",
+};
+
+const app = initializeApp(firebaseConfig);
+
 interface Package2IconProps extends React.SVGProps<SVGSVGElement> {}
+
+const db = getDatabase(app);
+
+
 
 export default function sidebar() {
   return (
@@ -111,7 +131,7 @@ export default function sidebar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                className="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800 dark:border-gray-800"
+                className="rounded-full border border-gray-200 w-8 h-8 dark:border-gray-800"
                 size="icon"
                 variant="ghost"
               >

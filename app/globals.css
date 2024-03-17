@@ -31,3 +31,10 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Add this to your global CSS file or a component-specific CSS module */
+.gradient-text {
+  background: linear-gradient(to right, #aa1414, #dee512);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+ }
