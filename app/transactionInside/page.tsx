@@ -13,6 +13,17 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+import {
   getDatabase,
   ref,
   onValue,
@@ -107,7 +118,7 @@ export default function Component() {
             </CardHeader>
             <CardContent>
               <Label htmlFor="name">Name</Label>
-              <Input
+              <CommandInput
                 id="name"
                 name="name"
                 placeholder="Name"
@@ -115,17 +126,17 @@ export default function Component() {
                 onChange={handleInputChange}
               />
               {filteredNames.length > 0 && (
-                <ul>
+                <CommandList>
                   {filteredNames.map((name, index) => (
-                    <li
+                    <Command
                       key={index}
                       onClick={() => setInputValue(name)}
                       className="flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent"
                     >
                       {name.length > 20 ? `${name.substring(0, 20)}...` : name}
-                    </li>
+                    </Command>
                   ))}
-                </ul>
+                </CommandList>
               )}
             </CardContent>
             <CardFooter>
