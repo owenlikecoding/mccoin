@@ -31,9 +31,10 @@ import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 import { ResponsiveLine } from "@nivo/line";
 import { ResponsivePie } from "@nivo/pie";
 import { Dice1, Dice5, Dice6, MountainIcon } from "lucide-react";
+import Cookies from "js-cookie";
 
 import { initializeApp } from "firebase/app";
-import {getDatabase, ref, set} from "firebase/database";
+import {getDatabase, ref, set, get} from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXn34NBurMAMvApEOTrASF_JxEm5dEkDY",
@@ -51,6 +52,12 @@ const app = initializeApp(firebaseConfig);
 interface Package2IconProps extends React.SVGProps<SVGSVGElement> {}
 
 const db = getDatabase(app);
+
+const uid = Cookies.get("uid");
+
+get(ref(db, "users/" + uid)).then((snapshot) => {
+  console.log(snapshot.val());
+});
 
 
 

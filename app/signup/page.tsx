@@ -9,6 +9,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
+import { getDatabase, set, ref } from "firebase/database";
 import Cookies from "js-cookie";
 
 interface MountainIconProps extends React.SVGProps<SVGSVGElement> {}
@@ -27,6 +28,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+const db = getDatabase(app);
+
 export default function Component() {
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
@@ -42,8 +45,16 @@ export default function Component() {
       }
       const user = result.user;
       console.log(user);
+      set(ref(db, "users/" + user.uid), {
+        name: user.displayName,
+        email: user.email,
+        profile_picture: user.photoURL,
+      });
       Cookies.set("uid", user.uid);
-      window.location.href = "/dashboard";
+
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 2000);
     } catch (error) {
       console.error(error);
     }
@@ -70,9 +81,16 @@ export default function Component() {
         password
       );
       alert("Account created successfully");
+
+      set(ref(db, "users/" + userCredential.user.uid), {
+        name: name,
+        email: email,
+        profile_picture: "/def.svg",
+      });
       Cookies.set("uid", userCredential.user.uid);
-      window.location.href = "/dashboard";
-      
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 2000);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error);
