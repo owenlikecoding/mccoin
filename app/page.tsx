@@ -1,12 +1,22 @@
+"use client";
+
 import Link from "next/link";
 
 // Assuming Input and Button components are already optimized for Tailwind CSS
+import { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Cookies from "js-cookie";
 
 interface MountainIconProps extends React.SVGProps<SVGSVGElement> {}
 
 export default function Component() {
+  useEffect(() => {
+    const user = Cookies.get("uid");
+    if (user != null) {
+      window.location.href = "/dashboard";
+    }
+  }, []);
   return (
     <div className="flex flex-col min-h-screen">
       {" "}
@@ -18,10 +28,16 @@ export default function Component() {
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
           {/* Use Tailwind CSS for styling links */}
-          <Link href="#" className="text-sm font-medium hover:text-opacity-75">
+          <Link
+            href="/signup"
+            className="text-sm font-medium hover:text-opacity-75"
+          >
             Sign Up
           </Link>
-          <Link href="#" className="text-sm font-medium hover:text-opacity-75">
+          <Link
+            href="/signin"
+            className="text-sm font-medium hover:text-opacity-75"
+          >
             Log In
           </Link>
         </nav>
@@ -31,7 +47,7 @@ export default function Component() {
           <div className="container mx-auto flex flex-col items-center justify-center space-y-4 px-4 md:px-6">
             <div className="flex items-center justify-center">
               <div className="text-center space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                   The Digital {""}
                   <span className="bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent">
                     Currency
@@ -45,7 +61,9 @@ export default function Component() {
               </div>
             </div>
             <form className="w-full max-w-md flex flex-col md:flex-row gap-4 justify-center items-center">
-              <Link href="/dashboard"><Button type="submit">Get Started</Button></Link>
+              <Link href="/signup">
+                <Button type="submit">Get Started</Button>
+              </Link>
             </form>
           </div>
         </section>
@@ -58,7 +76,7 @@ export default function Component() {
           <nav className="flex gap-4 mt-4 sm:mt-0">
             <Link href="/tos" className="text-xs hover:text-opacity-75">
               Terms of Service
-            </Link> 
+            </Link>
           </nav>
         </div>
       </footer>

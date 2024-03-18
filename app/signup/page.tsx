@@ -49,6 +49,7 @@ export default function Component() {
         name: user.displayName,
         email: user.email,
         profile_picture: user.photoURL,
+        balance: 0,
       });
       Cookies.set("uid", user.uid);
 
@@ -194,6 +195,14 @@ export default function Component() {
               />
               Continue With Google
             </button>
+            <div className="flex justify-center mt-2">
+              <Link
+                href="/signin"
+                className="text-blue-500 hover:text-blue-700"
+              >
+                Already have an account? Sign In
+              </Link>
+            </div>
           </div>
         </form>
       </div>

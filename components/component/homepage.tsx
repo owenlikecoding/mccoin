@@ -34,7 +34,9 @@ import { Dice1, Dice5, Dice6, MountainIcon } from "lucide-react";
 import Cookies from "js-cookie";
 
 import { initializeApp } from "firebase/app";
-import {getDatabase, ref, set, get} from "firebase/database";
+import { getDatabase, ref, set, get } from "firebase/database";
+
+import { useEffect, useState } from "react";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXn34NBurMAMvApEOTrASF_JxEm5dEkDY",
@@ -59,9 +61,31 @@ get(ref(db, "users/" + uid)).then((snapshot) => {
   console.log(snapshot.val());
 });
 
-
-
 export default function sidebar() {
+  const [username, setUsername] = useState("");
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    const uid = Cookies.get("uid");
+    if (uid) {
+      get(ref(db, "users/" + uid)).then((snapshot) => {
+        const userData = snapshot.val();
+        if (userData && userData.name) {
+          setUsername(userData.name);
+        } else {
+          alert("Account May Be Incorrectly Setup");
+        }
+        if (userData && userData.balance) {
+          setBalance(userData.balance);
+        } else {
+          alert("Account May Be Incorrectly Setup");
+        }
+      });
+    } else {
+      // Handle the case where uid is not available
+      console.log("UID not found in cookies");
+    }
+  }, []);
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
@@ -146,7 +170,7 @@ export default function sidebar() {
                   alt="Avatar"
                   className="rounded-full"
                   height="32"
-                  src="/placeholder.svg"
+                  src="/def.svg"
                   style={{
                     aspectRatio: "32/32",
                     objectFit: "cover",
@@ -166,12 +190,21 @@ export default function sidebar() {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 items-center justify-center">
-          <Card className="max-w-sm rounded overflow-hidden shadow-lg">
-            <CardContent>
-              <p className="text-center font-bold text-2xl">Hello</p>{" "}
-            </CardContent>
-          </Card>
+        <main className="flex-1 p-4 md:p-6 flex justify-center items-center">
+          <div className="flex flex-col lg:flex-row justify-between">
+            <div>
+              <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                Sup {username}
+              </h1>
+              <p className="leading-7 [&:not(:first-child)]:mt-6">
+                You have <span className="font-semibold">{balance}</span>{" "}
+                McCoins
+              </p>
+              <Link href="/transactionInside">
+              <Button className="mt-2">Create Transaction</Button>
+              </Link>
+            </div>
+          </div>
         </main>
       </div>
     </div>
