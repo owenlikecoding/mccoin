@@ -73,12 +73,12 @@ export default function sidebar() {
         if (userData && userData.name) {
           setUsername(userData.name);
         } else {
-          alert("Account May Be Incorrectly Setup");
+          console.log("goofy account");
         }
         if (userData && userData.balance) {
           setBalance(userData.balance);
         } else {
-          alert("Account May Be Incorrectly Setup");
+           console.log("goofy account");
         }
       });
     } else {
