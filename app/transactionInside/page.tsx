@@ -2,70 +2,72 @@
 
 import React, { useState, useEffect } from "react";
 import {
- CardTitle,
- CardDescription,
- CardHeader,
- CardContent,
- CardFooter,
- Card,
+  CardTitle,
+  CardDescription,
+  CardHeader,
+  CardContent,
+  CardFooter,
+  Card,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
- getDatabase,
- ref,
- onValue,
- off,
- DataSnapshot,
- get,
- update,
- push,
- query,
- orderByChild,
- equalTo,
+  getDatabase,
+  ref,
+  onValue,
+  off,
+  DataSnapshot,
+  get,
+  update,
+  push,
+  query,
+  orderByChild,
+  equalTo,
 } from "firebase/database";
 import { initializeApp } from "firebase/app";
 import Cookies from "js-cookie";
 import {
- DropdownMenuTrigger,
- DropdownMenuLabel,
- DropdownMenuSeparator,
- DropdownMenuItem,
- DropdownMenuContent,
- DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenu,
 } from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/router";
 
 // Firebase configuration and initialization
 const firebaseConfig = {
- apiKey: "AIzaSyBXn34NBurMAMvApEOTrASF_JxEm5dEkDY",
- authDomain: "owen-bucks-evolved.firebaseapp.com",
- databaseURL: "https://owen-bucks-evolved-default-rtdb.firebaseio.com",
- projectId: "owen-bucks-evolved",
- storageBucket: "owen-bucks-evolved.appspot.com",
- messagingSenderId: "78917635267",
- appId: "1:78917635267:web:e5aa6f89987f9e38326676",
- measurementId: "G-JG7NGCN5P1",
+  apiKey: "AIzaSyBXn34NBurMAMvApEOTrASF_JxEm5dEkDY",
+  authDomain: "owen-bucks-evolved.firebaseapp.com",
+  databaseURL: "https://owen-bucks-evolved-default-rtdb.firebaseio.com",
+  projectId: "owen-bucks-evolved",
+  storageBucket: "owen-bucks-evolved.appspot.com",
+  messagingSenderId: "78917635267",
+  appId: "1:78917635267:web:e5aa6f89987f9e38326676",
+  measurementId: "G-JG7NGCN5P1",
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 export default function Component() {
- const [userNames, setUserNames] = useState<string[]>([]);
- const [filteredNames, setFilteredNames] = useState<string[]>([]);
- const [isAmountInputFocused, setIsAmountInputFocused] = useState(false);
- const [inputValue, setInputValue] = useState("");
- const [transactionDetails, setTransactionDetails] = useState({
+  const [userNames, setUserNames] = useState<string[]>([]);
+  const [filteredNames, setFilteredNames] = useState<string[]>([]);
+  const [isAmountInputFocused, setIsAmountInputFocused] = useState(false);
+  const [nameInputValue, setNameInputValue] = useState("");
+  const [amountInputValue, setAmountInputValue] = useState("");
+  const [transactionDetails, setTransactionDetails] = useState({
     name: "",
     amount: "",
     description: "",
     category: "",
     date: "",
     recipient: "",
- });
+  });
 
- useEffect(() => {
+  useEffect(() => {
     const usersRef = ref(db, "users");
     const handleUsers = (snapshot: DataSnapshot) => {
       const users = snapshot.val();
@@ -78,9 +80,9 @@ export default function Component() {
     return () => {
       off(usersRef, "value", handleUsers);
     };
- }, []);
+  }, []);
 
- const fetchCurrentBalance = async () => {
+  const fetchCurrentBalance = async () => {
     return get(ref(db, `users/${Cookies.get("uid")}/balance`)).then(
       (snapshot) => {
         if (snapshot.exists()) {
@@ -90,11 +92,10 @@ export default function Component() {
         }
       }
     );
- };
+  };
 
- const createTransaction = async (transactionDetails: any) => {
-    const { recipient, amount, description, category, date } =
-      transactionDetails;
+  const createTransaction = async (transactionDetails: any) => {
+    const { recipient, amount, description, category } = transactionDetails;
     const sender = Cookies.get("uid");
     const senderRef = ref(db, `users/${sender}`);
     const recipientRef = ref(db, `users/${recipient}`);
@@ -121,28 +122,36 @@ export default function Component() {
         balance: newRecipientBalance,
       });
 
-      // Create the transaction
+      // Create the transaction with the current date
+      const currentDate = new Date().toISOString(); // This formats the date as an ISO string
       await push(ref(db, "transactions"), {
         sender,
         recipient,
         amount,
         description,
         category,
-        date,
+        date: currentDate, // Set the date here
       });
+
+      setTimeout(() => {
+        alert("Transaction successful!");
+        window.location.href = "/dashboard";
+      }, 500);
     } else {
       alert("Insufficient balance for this transaction.");
     }
- };
+  };
 
- const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setInputValue(value);
-    const filtered = userNames.filter((name) => name);
-    setFilteredNames(filtered);
+    if (name === "name") {
+      setNameInputValue(value);
+      const filtered = userNames.filter((name) => name);
+      setFilteredNames(filtered);
+    }
     setTransactionDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
- };
- const getUserIdByName = async (name: string): Promise<string | null> => {
+  };
+  const getUserIdByName = async (name: string): Promise<string | null> => {
     const usersRef = ref(db, "users");
     const snapshot = await get(usersRef);
 
@@ -152,12 +161,12 @@ export default function Component() {
     const userId = userIds.find((id) => users[id].name === name);
     console.log(userId);
     return userId || null;
- };
+  };
 
- const handleAmountInputFocus = () => setIsAmountInputFocused(true);
- const handleAmountInputBlur = () => setIsAmountInputFocused(false);
+  const handleAmountInputFocus = () => setIsAmountInputFocused(true);
+  const handleAmountInputBlur = () => setIsAmountInputFocused(false);
 
- const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // Check if the recipient's name has been resolved to a user ID
@@ -183,9 +192,9 @@ export default function Component() {
 
     // Proceed with creating the transaction
     createTransaction({ ...transactionDetails, recipient: recipientId });
- };
+  };
 
- return (
+  return (
     <div className="flex justify-center items-center min-h-screen">
       <Card>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -198,19 +207,19 @@ export default function Component() {
               id="name"
               name="name"
               placeholder="Name"
-              value={inputValue}
+              value={nameInputValue}
               onChange={handleInputChange}
             />
             {filteredNames.length > 0 && (
               <ul className="list-none">
                 {filteredNames.map((name, index) => (
-                 <li
+                  <li
                     key={index}
-                    onClick={() => setInputValue(name)}
+                    onClick={() => setNameInputValue(name)}
                     className="cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent"
-                 >
+                  >
                     {name.length > 20 ? `${name.substring(0, 20)}...` : name}
-                 </li>
+                  </li>
                 ))}
               </ul>
             )}
@@ -237,5 +246,5 @@ export default function Component() {
         </form>
       </Card>
     </div>
- );
+  );
 }

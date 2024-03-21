@@ -38,6 +38,16 @@ import { getDatabase, ref, set, get } from "firebase/database";
 
 import { useEffect, useState } from "react";
 
+import {
+  Button as Cuttin,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+} from "reactstrap";
+
+import { RecentTransactions } from "./recentTransactions";
+
 const firebaseConfig = {
   apiKey: "AIzaSyBXn34NBurMAMvApEOTrASF_JxEm5dEkDY",
   authDomain: "owen-bucks-evolved.firebaseapp.com",
@@ -64,10 +74,16 @@ get(ref(db, "users/" + uid)).then((snapshot) => {
 export default function sidebar() {
   const [username, setUsername] = useState("");
   const [balance, setBalance] = useState(0);
+  const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [profilePictureUrl, setProfilePictureUrl] = useState("");
+
+  const toggle = () => setModal(!modal);
 
   useEffect(() => {
     const uid = Cookies.get("uid");
     if (uid) {
+      setLoading(true); // Set loading to true before fetching data
       get(ref(db, "users/" + uid)).then((snapshot) => {
         const userData = snapshot.val();
         if (userData && userData.name) {
@@ -78,16 +94,32 @@ export default function sidebar() {
         if (userData && userData.balance) {
           setBalance(userData.balance);
         } else {
-           console.log("goofy account");
+          console.log("goofy account");
         }
+        if (userData && userData.profile_picture) {
+          setProfilePictureUrl(userData.profile_picture);
+          console.log("midget");
+        } else {
+        }
+        setLoading(false); // Set loading to false after data is fetched
       });
     } else {
       // Handle the case where uid is not available
       console.log("UID not found in cookies");
+      setLoading(false); // Set loading to false if uid is not available
     }
   }, []);
+
+  if (loading) {
+    return <div className="loading-bar"></div>;
+  }
+
   return (
-    <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
+    <div
+      className={`grid min-h-screen w-full lg:grid-cols-[280px_1fr] ${
+        modal ? "hidden" : ""
+      }`}
+    >
       <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-[60px] items-center border-b px-6">
@@ -170,7 +202,7 @@ export default function sidebar() {
                   alt="Avatar"
                   className="rounded-full"
                   height="32"
-                  src="/def.svg"
+                  src={profilePictureUrl}
                   style={{
                     aspectRatio: "32/32",
                     objectFit: "cover",
@@ -183,14 +215,22 @@ export default function sidebar() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <Link href="/settings">
+                <span>
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                </span>
+              </Link>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="flex-1 p-4 md:p-6 flex justify-center items-center">
+        <main
+          className={`flex-1 p-4 md:p-6 flex justify-center items-center ${
+            modal ? "hidden" : ""
+          }`}
+        >
           <div className="flex flex-col lg:flex-row justify-between">
             <div>
               <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
@@ -201,8 +241,23 @@ export default function sidebar() {
                 McCoins
               </p>
               <Link href="/transactionInside">
-              <Button className="mt-2">Create Transaction</Button>
+                <Button className="mt-2">Create Transaction</Button>
               </Link>
+              <Button color="primary" onClick={toggle} className="m-1">
+                Show Recent Transactions
+              </Button>
+
+              <Modal isOpen={modal} toggle={toggle}>
+                <ModalHeader toggle={toggle}>Recent Transactions</ModalHeader>
+                <ModalBody>
+                  <RecentTransactions />
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="secondary" onClick={toggle}>
+                    Close
+                  </Button>
+                </ModalFooter>
+              </Modal>
             </div>
           </div>
         </main>

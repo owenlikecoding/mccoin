@@ -38,3 +38,34 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
  }
+
+ /* Define the loading bar */
+.loading-bar {
+  height: 4px; /* Adjust the height as needed */
+  width: 100%; /* Full width */
+  background-color: #ddd; /* Light grey background */
+  position: relative;
+  overflow: hidden; /* Hide the overflow */
+ }
+ 
+ /* Define the loading bar animation */
+ @keyframes loading {
+   0% {
+     width: 0;
+  }
+   100% {
+     width: 100%;
+  }
+ }
+ 
+ /* Apply the animation to the loading bar */
+ .loading-bar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #3498db; /* Blue color for the loading animation */
+  animation: loading 2s linear infinite; /* Adjust the animation duration as needed */
+ }
