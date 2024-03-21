@@ -31,6 +31,7 @@ import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 import { ResponsiveLine } from "@nivo/line";
 import { ResponsivePie } from "@nivo/pie";
 import { Dice1, Dice5, Dice6, MountainIcon } from "lucide-react";
+import { getAuth, signOut } from "firebase/auth";
 import Cookies from "js-cookie";
 
 import { initializeApp } from "firebase/app";
@@ -80,6 +81,18 @@ export default function sidebar() {
 
   const toggle = () => setModal(!modal);
 
+  const logout = async () => {
+    const auth = getAuth();
+    try {
+       await signOut(auth);
+        Cookies.remove("uid");
+       window.location.href = "/signin"; // Adjust the path as needed
+    } catch (error) {
+       console.error("Error signing out:", error);
+    }
+   };
+   
+
   useEffect(() => {
     const uid = Cookies.get("uid");
     if (uid) {
@@ -107,6 +120,7 @@ export default function sidebar() {
       // Handle the case where uid is not available
       console.log("UID not found in cookies");
       setLoading(false); // Set loading to false if uid is not available
+      window.location.href = "/signin"; // Redirect to login page
     }
   }, []);
 
@@ -220,9 +234,13 @@ export default function sidebar() {
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                 </span>
               </Link>
-              <DropdownMenuItem>Support</DropdownMenuItem>
+              <Link href="/support">
+                <span>
+                  <DropdownMenuItem>Support</DropdownMenuItem>
+                </span>
+              </Link>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>

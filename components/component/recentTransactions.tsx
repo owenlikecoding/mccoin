@@ -88,9 +88,6 @@ export function RecentTransactions() {
           </div>
         ))}
       </CardContent>
-      <CardFooter>
-        <Button>View All</Button>
-      </CardFooter>
     </Card>
   );
 }
