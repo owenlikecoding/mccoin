@@ -99,6 +99,9 @@ export default function Component() {
  const updateUserData = (uid: string, data: Partial<UserData>) => {
     update(ref(db, "users/" + uid), data);
     console.log("User data updated:", data);
+    setTimeout(() => {
+      window.location.href = "/dashboard";
+    }, 500);
  };
 
  return (

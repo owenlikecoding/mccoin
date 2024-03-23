@@ -84,14 +84,13 @@ export default function sidebar() {
   const logout = async () => {
     const auth = getAuth();
     try {
-       await signOut(auth);
-        Cookies.remove("uid");
-       window.location.href = "/signin"; // Adjust the path as needed
+      await signOut(auth);
+      Cookies.remove("uid");
+      window.location.href = "/signin"; // Adjust the path as needed
     } catch (error) {
-       console.error("Error signing out:", error);
+      console.error("Error signing out:", error);
     }
-   };
-   
+  };
 
   useEffect(() => {
     const uid = Cookies.get("uid");
@@ -149,7 +148,7 @@ export default function sidebar() {
           <div className="flex-1 overflow-auto py-2">
             <nav className="grid items-start px-4 text-sm font-medium">
               <Link
-                className="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900  transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                 href="/dashboard"
               >
                 <HomeIcon className="h-4 w-4" />
@@ -163,8 +162,8 @@ export default function sidebar() {
                 Shop
               </Link>
               <Link
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                href="/game"
+                className="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900  transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
+                href="#"
               >
                 <PlayIcon className="h-4 w-4" />
                 Game
@@ -244,39 +243,14 @@ export default function sidebar() {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main
-          className={`flex-1 p-4 md:p-6 flex justify-center items-center ${
-            modal ? "hidden" : ""
-          }`}
-        >
-          <div className="flex flex-col lg:flex-row justify-between">
-            <div>
-              <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                Sup {username}
-              </h1>
-              <p className="leading-7 [&:not(:first-child)]:mt-6">
-                You have <span className="font-semibold">{balance}</span>{" "}
-                McCoins
-              </p>
-              <Link href="/transactionInside">
-                <Button className="mt-2">Create Transaction</Button>
-              </Link>
-              <Button color="primary" onClick={toggle} className="m-1">
-                Show Recent Transactions
-              </Button>
-
-              <Modal isOpen={modal} toggle={toggle}>
-                <ModalHeader toggle={toggle}>Recent Transactions</ModalHeader>
-                <ModalBody>
-                  <RecentTransactions />
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="secondary" onClick={toggle}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </Modal>
-            </div>
+        <main className="flex items-center justify-center min-h-screen">
+          <div className="grid grid-cols-2 gap-4">
+            <Card>
+              <CardTitle>Snake Game</CardTitle>
+              <CardContent>
+                <img src="" alt="" />
+              </CardContent>
+            </Card>
           </div>
         </main>
       </div>

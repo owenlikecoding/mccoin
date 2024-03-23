@@ -30,43 +30,45 @@ export default function Component() {
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
-
+   
     setIsLoading(true);
-
+   
     try {
-      const result = await signInWithPopup(auth, provider);
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      if (credential) {
-        const token = credential.accessToken;
-        console.log(token);
-      } else {
-        console.error("Credential is null");
-      }
-      const user = result.user;
-      console.log(user);
-      // Check if the user is new
-      get(ref(db, "users/" + user.uid)).then((snapshot) => {
-        if (snapshot.exists()) {
-          Cookies.set("uid", user.uid);
-          window.location.href = "/dashboard";
-        } else {
-          set(ref(db, "users/" + user.uid), {
-            name: user.displayName,
-            email: user.email,
-            profile_picture: user.photoURL,
-            balance: 0,
-          });
-          Cookies.set("uid", user.uid);
-          setTimeout(() => {
-            setIsLoading(false);
-            window.location.href = "/dashboard";
-          }, 2000);
-        }
-      });
+       const result = await signInWithPopup(auth, provider);
+       const credential = GoogleAuthProvider.credentialFromResult(result);
+       if (credential) {
+         const token = credential.accessToken;
+         console.log(token);
+       } else {
+         console.error("Credential is null");
+       }
+       const user = result.user;
+       console.log(user);
+       // Check if the user is new
+       get(ref(db, "users/" + user.uid)).then((snapshot) => {
+         if (snapshot.exists()) {
+           // User exists, no need to update, just set the cookie and redirect
+           Cookies.set("uid", user.uid);
+           window.location.href = "/dashboard";
+         } else {
+           // User does not exist, create or update user info
+           set(ref(db, "users/" + user.uid), {
+             name: user.displayName,
+             email: user.email,
+             profile_picture: user.photoURL,
+             balance: 0,
+           });
+           Cookies.set("uid", user.uid);
+           setTimeout(() => {
+             setIsLoading(false);
+             window.location.href = "/dashboard";
+           }, 2000);
+         }
+       });
     } catch (error) {
-      console.error(error);
+       console.error(error);
     }
-  };
+   };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -9,7 +9,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
-import { getDatabase, set, ref } from "firebase/database";
+import { getDatabase, set, ref,get, update } from "firebase/database";
 import Cookies from "js-cookie";
 
 interface MountainIconProps extends React.SVGProps<SVGSVGElement> {}
@@ -34,6 +34,8 @@ export default function Component() {
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
+
+
     try {
       const result = await signInWithPopup(auth, provider);
       const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -45,17 +47,26 @@ export default function Component() {
       }
       const user = result.user;
       console.log(user);
-      set(ref(db, "users/" + user.uid), {
-        name: user.displayName,
-        email: user.email,
-        profile_picture: user.photoURL,
-        balance: 0,
+      // Check if the user is new
+      get(ref(db, "users/" + user.uid)).then((snapshot) => {
+        if (snapshot.exists()) {
+          // User exists, no need to update, just set the cookie and redirect
+          Cookies.set("uid", user.uid);
+          window.location.href = "/dashboard";
+        } else {
+          // User does not exist, create or update user info
+          set(ref(db, "users/" + user.uid), {
+            name: user.displayName,
+            email: user.email,
+            profile_picture: user.photoURL,
+            balance: 0,
+          });
+          Cookies.set("uid", user.uid);
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 2000);
+        }
       });
-      Cookies.set("uid", user.uid);
-
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 2000);
     } catch (error) {
       console.error(error);
     }
