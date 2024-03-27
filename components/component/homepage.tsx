@@ -72,7 +72,8 @@ get(ref(db, "users/" + uid)).then((snapshot) => {
   console.log(snapshot.val());
 });
 
-export default function sidebar() {
+// Rename the function to start with an uppercase letter
+export default function Sidebar() {
   const [username, setUsername] = useState("");
   const [balance, setBalance] = useState(0);
   const [modal, setModal] = useState(false);
