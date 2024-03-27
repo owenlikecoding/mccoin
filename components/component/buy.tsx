@@ -46,6 +46,11 @@ import {
 } from "reactstrap";
 
 import { RecentTransactions } from "./recentTransactions";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+  "pk_live_51KMYPJBEkzmgVjPESf9c7SJ1slZtY8tkr2QgbnP8gbxbefNky2ccktxi7P3TSWICLgZLQJ40wI76mP1TyrMraqxh00q9SxtfuY"
+);
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXn34NBurMAMvApEOTrASF_JxEm5dEkDY",
@@ -57,6 +62,8 @@ const firebaseConfig = {
   appId: "1:78917635267:web:e5aa6f89987f9e38326676",
   measurementId: "G-JG7NGCN5P1",
 };
+
+<script async src="https://js.stripe.com/v3/buy-button.js"></script>;
 
 const app = initializeApp(firebaseConfig);
 
@@ -84,14 +91,13 @@ export default function Sidebar() {
   const logout = async () => {
     const auth = getAuth();
     try {
-       await signOut(auth);
-        Cookies.remove("uid");
-       window.location.href = "/signin"; // Adjust the path as needed
+      await signOut(auth);
+      Cookies.remove("uid");
+      window.location.href = "/signin"; // Adjust the path as needed
     } catch (error) {
-       console.error("Error signing out:", error);
+      console.error("Error signing out:", error);
     }
-   };
-   
+  };
 
   useEffect(() => {
     const uid = Cookies.get("uid");
@@ -149,7 +155,7 @@ export default function Sidebar() {
           <div className="flex-1 overflow-auto py-2">
             <nav className="grid items-start px-4 text-sm font-medium">
               <Link
-                className="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900  transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                 href="/dashboard"
               >
                 <HomeIcon className="h-4 w-4" />
@@ -170,7 +176,7 @@ export default function Sidebar() {
                 Game
               </Link>
               <Link
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                className="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900  transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
                 href="/buy"
               >
                 <ShoppingCartIcon className="h-4 w-4" />
@@ -250,33 +256,7 @@ export default function Sidebar() {
           }`}
         >
           <div className="flex flex-col lg:flex-row justify-between">
-            <div>
-              <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                Sup {username}
-              </h1>
-              <p className="leading-7 [&:not(:first-child)]:mt-6">
-                You have <span className="font-semibold">{balance}</span>{" "}
-                McCoins
-              </p>
-              <Link href="/transactionInside">
-                <Button className="mt-2">Create Transaction</Button>
-              </Link>
-              <Button color="primary" onClick={toggle} className="m-1">
-                Show Recent Transactions
-              </Button>
-
-              <Modal isOpen={modal} toggle={toggle}>
-                <ModalHeader toggle={toggle}>Recent Transactions</ModalHeader>
-                <ModalBody>
-                  <RecentTransactions />
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="secondary" onClick={toggle}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </Modal>
-            </div>
+            
           </div>
         </main>
       </div>

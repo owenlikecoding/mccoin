@@ -156,21 +156,21 @@ export default function Sidebar() {
               </Link>
               <Link
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                href="#"
+                href="/shop"
               >
                 <LineChartIcon className="h-4 w-4" />
                 Shop
               </Link>
               <Link
                 className="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900  transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
-                href="#"
+                href="/game"
               >
                 <PlayIcon className="h-4 w-4" />
                 Game
               </Link>
               <Link
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                href="#"
+                href="/buy"
               >
                 <ShoppingCartIcon className="h-4 w-4" />
                 Buy
@@ -245,14 +245,16 @@ export default function Sidebar() {
         </header>
         <main className="flex items-center justify-center min-h-screen">
           <div className="grid grid-cols-2 gap-4">
-            <Card className="p-5 flex flex-col items-center justify-center">
-              <CardTitle className="text-center text-xl font-bold mb-4">
-                Snake Game
-              </CardTitle>
-              <CardDescription>Snake Game</CardDescription>
-              <CardContent className="flex flex-col items-center">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl font-bold">Snake Game</CardTitle>
+                <CardDescription>
+                  Test your your reaction skills
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col justify-start">
                 <Link href="/snakegame">
-                  <Button className="mb-2">Play</Button>
+                  <Button className="">Play</Button>
                 </Link>
               </CardContent>
             </Card>
@@ -261,7 +263,7 @@ export default function Sidebar() {
                 <CardTitle className="text-xl font-bold">Math Game</CardTitle>
                 <CardDescription>Test your math skills</CardDescription>
               </CardHeader>
-              <CardContent className="flex flex-col items-center justify-center">
+              <CardContent className="flex flex-col">
                 <Link href="/mathgame">
                   <Button className="">Play</Button>
                 </Link>
