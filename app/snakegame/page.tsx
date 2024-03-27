@@ -1,459 +1,231 @@
 "use client";
 
-import React from "react";
-import "./SnakeGame.css";
-import GameOver from "./GameOver";
+import React, { useEffect, useState, useRef } from "react";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, update, get, onValue, off } from "firebase/database";
 import Cookies from "js-cookie";
 
-interface SnakeGameState {
-  width: number;
-  height: number;
-  blockWidth: number;
-  blockHeight: number;
-  gameLoopTimeout: number;
-  timeoutId: NodeJS.Timeout | null;
-  startSnakeSize: number;
-  snake: { Xpos: number; Ypos: number }[];
-  apple: { Xpos: number; Ypos: number };
-  direction: string;
-  directionChanged: boolean;
-  isGameOver: boolean;
-  snakeColor: string;
-  appleColor: string;
-  score: number;
-  highScore: number;
-  newHighScore: boolean;
+const firebaseConfig = {
+  apiKey: "AIzaSyBXn34NBurMAMvApEOTrASF_JxEm5dEkDY",
+  authDomain: "owen-bucks-evolved.firebaseapp.com",
+  databaseURL: "https://owen-bucks-evolved-default-rtdb.firebaseio.com",
+  projectId: "owen-bucks-evolved",
+  storageBucket: "owen-bucks-evolved.appspot.com",
+  messagingSenderId: "78917635267",
+  appId: "1:78917635267:web:e5aa6f89987f9e38326676",
+  measurementId: "G-JG7NGCN5P1",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+interface SnakeSegment {
+  x: number;
+  y: number;
 }
 
-interface SnakeGameProps {
-  percentageWidth?: number;
-  startSnakeSize?: number;
-  snakeColor?: string;
-  appleColor?: string;
-}
+const GamePage: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [score, setScore] = useState<number>(0);
+  const [snakeSegments, setSnakeSegments] = useState<SnakeSegment[]>([
+    { x: 10, y: 10 },
+  ]);
+  const [apple, setApple] = useState<SnakeSegment>({ x: 5, y: 5 });
+  const [direction, setDirection] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [gameSpeed] = useState<number>(8);
+  const [currentBalance, setCurrentBalance] = useState<number>(0);
 
-class SnakeGame extends React.Component<SnakeGameProps, SnakeGameState> {
-  constructor(props: SnakeGameProps) {
-    super(props);
+  useEffect(() => {
+    const userId = Cookies.get("uid");
+    const balanceRef = ref(db, `users/${userId}/balance`);
 
-    this.state = {
-      width: 0,
-      height: 0,
-      blockWidth: 0,
-      blockHeight: 0,
-      gameLoopTimeout: 150,
-      timeoutId: null,
-      startSnakeSize: 0,
-      snake: [],
-      apple: { Xpos: 0, Ypos: 0 },
-      direction: "right",
-      directionChanged: false,
-      isGameOver: false,
-      snakeColor: "green",
-      appleColor: "red",
-      score: 0,
-      highScore: Number(Cookies.get("snakeHighScore")) || 0,
-      newHighScore: false,
+    const balanceListener = onValue(balanceRef, (snapshot) => {
+      const balance = snapshot.val();
+      setCurrentBalance(balance);
+    });
+
+    // Clean up the listener when the component unmounts
+    return () => {
+      off(balanceRef, "value", balanceListener);
     };
-  }
+  }, [db, Cookies.get("uid")]);
 
-  componentDidMount() {
-    this.initGame();
-    window.addEventListener("keydown", (event) => this.hhandleKeyDown(event));
-    this.gameLoop();
-  }
-
-  killSnake() {
-    this.setState({ isGameOver: true });
-  }
-
-  initGame() {
-    // Game size initialization
-    let percentageWidth = this.props.percentageWidth || 30; // Decrease the percentage width // Decrease the percentage width
-    let gameBoardElement = document.getElementById("GameBoard");
-    let width = 0;
-    if (gameBoardElement && gameBoardElement.parentElement) {
-      width =
-        gameBoardElement.parentElement.offsetWidth * (percentageWidth / 100);
-    }
-    width -= width % 30;
-    if (width < 30) width = 30;
-    let height = (width / 3) * 2; // Adjust the height accordingly
-    let blockWidth = width / 30;
-    let blockHeight = height / 20;
-
-    // snake initialization
-    let startSnakeSize = this.props.startSnakeSize || 6;
-    let snake = [];
-    let Xpos = width / 2;
-    let Ypos = height / 2;
-    let snakeHead = { Xpos: width / 2, Ypos: height / 2 };
-    snake.push(snakeHead);
-    for (let i = 1; i < startSnakeSize; i++) {
-      Xpos -= blockWidth;
-      let snakePart = { Xpos: Xpos, Ypos: Ypos };
-      snake.push(snakePart);
-    }
-
-    // apple position initialization
-    let appleXpos =
-      Math.floor(Math.random() * ((width - blockWidth) / blockWidth + 1)) *
-      blockWidth;
-    let appleYpos =
-      Math.floor(Math.random() * ((height - blockHeight) / blockHeight + 1)) *
-      blockHeight;
-    while (appleYpos === snake[0].Ypos) {
-      appleYpos =
-        Math.floor(Math.random() * ((height - blockHeight) / blockHeight + 1)) *
-        blockHeight;
-    }
-
-    this.setState({
-      width,
-      height,
-      blockWidth,
-      blockHeight,
-      startSnakeSize,
-      snake,
-      apple: { Xpos: appleXpos, Ypos: appleYpos },
+  const initializeGame = () => {
+    setGameOver(false);
+    setGameStarted(true); // Set gameStarted to true to start the game immediately
+    setScore(0);
+    setSnakeSegments([{ x: 10, y: 10 }]);
+    setApple({
+      x: Math.floor(Math.random() * 20),
+      y: Math.floor(Math.random() * 20),
     });
-  }
+    setDirection({ x: 0, y: 0 });
+  };
 
-  gameLoop() {
-    let timeoutId = setTimeout(() => {
-      if (!this.state.isGameOver) {
-        this.moveSnake();
-        this.tryToEatSnake();
-        this.tryToEatApple();
-        this.setState({ directionChanged: false });
+  // Call initializeGame immediately to start the game
+  useEffect(() => {
+    initializeGame();
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      setGameStarted(true);
+      switch (e.key) {
+        case "ArrowLeft":
+          if (direction.x !== 1) setDirection({ x: -1, y: 0 });
+          break;
+        case "ArrowUp":
+          if (direction.y !== 1) setDirection({ x: 0, y: -1 });
+          break;
+        case "ArrowRight":
+          if (direction.x !== -1) setDirection({ x: 1, y: 0 });
+          break;
+        case "ArrowDown":
+          if (direction.y !== -1) setDirection({ x: 0, y: 1 });
+          break;
       }
+    };
 
-      this.gameLoop();
-    }, this.state.gameLoopTimeout);
+    document.addEventListener("keydown", handleKeyDown);
 
-    this.setState({ timeoutId });
-  }
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [direction]);
 
-  componentWillUnmount() {
-    if (this.state.timeoutId) {
-      clearTimeout(this.state.timeoutId);
-    }
-    window.removeEventListener("keydown", this.hhandleKeyDown);
-  }
-
-  resetGame() {
-    let width = this.state.width || 0;
-    let height = this.state.height || 0;
-    let blockWidth = this.state.blockWidth;
-    let blockHeight = this.state.blockHeight;
-    let apple = this.state.apple;
-
-    // snake reset
-    let snake = [];
-    let Xpos = width / 2;
-    let Ypos = height / 2;
-    let snakeHead = { Xpos: width / 2, Ypos: height / 2 };
-    snake.push(snakeHead);
-    for (let i = 1; i < this.state.startSnakeSize; i++) {
-      Xpos -= blockWidth;
-      let snakePart = { Xpos: Xpos, Ypos: Ypos };
-      snake.push(snakePart);
-    }
-
-    // apple position reset
-    apple.Xpos =
-      Math.floor(Math.random() * ((width - blockWidth) / blockWidth + 1)) *
-      blockWidth;
-    apple.Ypos =
-      Math.floor(Math.random() * ((height - blockHeight) / blockHeight + 1)) *
-      blockHeight;
-    while (this.isAppleOnSnake(apple.Xpos, apple.Ypos)) {
-      apple.Xpos =
-        Math.floor(Math.random() * ((width - blockWidth) / blockWidth + 1)) *
-        blockWidth;
-      apple.Ypos =
-        Math.floor(Math.random() * ((height - blockHeight) / blockHeight + 1)) *
-        blockHeight;
-    }
-
-    this.setState({
-      snake,
-      apple,
-      direction: "right",
-      directionChanged: false,
-      isGameOver: false,
-      gameLoopTimeout: 50,
-      snakeColor: this.getRandomColor(),
-      appleColor: this.getRandomColor(),
-      score: 0,
-      newHighScore: false,
-    });
-  }
-
-  getRandomColor() {
-    let hexa = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) color += hexa[Math.floor(Math.random() * 16)];
-    return color;
-  }
-
-  moveSnake() {
-    let snake = this.state.snake;
-    let previousPartX = this.state.snake[0].Xpos;
-    let previousPartY = this.state.snake[0].Ypos;
-    let tmpPartX = previousPartX;
-    let tmpPartY = previousPartY;
-    this.moveHead();
-    for (let i = 1; i < snake.length; i++) {
-      tmpPartX = snake[i].Xpos;
-      tmpPartY = snake[i].Ypos;
-      snake[i].Xpos = previousPartX;
-      snake[i].Ypos = previousPartY;
-      previousPartX = tmpPartX;
-      previousPartY = tmpPartY;
-    }
-    this.setState({ snake });
-  }
-
-  tryToEatApple() {
-    let snake = this.state.snake;
-    let apple = this.state.apple;
-
-    // if the snake's head is on an apple
-    if (snake[0].Xpos === apple.Xpos && snake[0].Ypos === apple.Ypos) {
-      let width = this.state.width;
-      let height = this.state.height;
-      let blockWidth = this.state.blockWidth;
-      let blockHeight = this.state.blockHeight;
-      let newTail = { Xpos: apple.Xpos, Ypos: apple.Ypos };
-      let highScore = this.state.highScore;
-      let newHighScore = this.state.newHighScore;
-      let gameLoopTimeout = this.state.gameLoopTimeout;
-
-      // increase snake size
-      snake.push(newTail);
-
-      // create another apple
-      apple.Xpos =
-        Math.floor(Math.random() * ((width - blockWidth) / blockWidth + 1)) *
-        blockWidth;
-      apple.Ypos =
-        Math.floor(Math.random() * ((height - blockHeight) / blockHeight + 1)) *
-        blockHeight;
-      while (this.isAppleOnSnake(apple.Xpos, apple.Ypos)) {
-        apple.Xpos =
-          Math.floor(Math.random() * ((width - blockWidth) / blockWidth + 1)) *
-          blockWidth;
-        apple.Ypos =
-          Math.floor(
-            Math.random() * ((height - blockHeight) / blockHeight + 1)
-          ) * blockHeight;
-      }
-
-      // increment high score if needed
-      if (this.state.score === highScore) {
-        highScore++;
-        Cookies.set("snakeHighScore", highScore.toString());
-        newHighScore = true;
-      }
-
-      // decrease the game loop timeout
-      if (gameLoopTimeout > 25) gameLoopTimeout -= 0.5;
-
-      this.setState({
-        snake,
-        apple,
-        score: this.state.score + 1,
-        highScore,
-        newHighScore,
-        gameLoopTimeout,
-      });
-    }
-  }
-
-  tryToEatSnake() {
-    let snake = this.state.snake;
-
-    for (let i = 1; i < snake.length; i++) {
-      if (snake[0].Xpos === snake[i].Xpos && snake[0].Ypos === snake[i].Ypos)
-        this.setState({ isGameOver: true });
-    }
-  }
-
-  isAppleOnSnake(appleXpos: number, appleYpos: number) {
-    let snake = this.state.snake;
-    for (let i = 0; i < snake.length; i++) {
-      if (appleXpos === snake[i].Xpos && appleYpos === snake[i].Ypos)
-        return true;
-    }
-    return false;
-  }
-
-  moveHead() {
-    switch (this.state.direction) {
-      case "left":
-        this.moveHeadLeft();
-        break;
-      case "up":
-        this.moveHeadUp();
-        break;
-      case "right":
-        this.moveHeadRight();
-        break;
-      default:
-        this.moveHeadDown();
-    }
-  }
-
-  moveHeadLeft() {
-    let width = this.state.width;
-    let blockWidth = this.state.blockWidth;
-    let snake = this.state.snake;
-    snake[0].Xpos =
-      snake[0].Xpos <= 0 ? width - blockWidth : snake[0].Xpos - blockWidth;
-    this.setState({ snake });
-  }
-
-  moveHeadUp() {
-    let height = this.state.height;
-    let blockHeight = this.state.blockHeight;
-    let snake = this.state.snake;
-    snake[0].Ypos =
-      snake[0].Ypos <= 0 ? height - blockHeight : snake[0].Ypos - blockHeight;
-    this.setState({ snake });
-  }
-
-  moveHeadRight() {
-    let width = this.state.width;
-    let blockWidth = this.state.blockWidth;
-    let snake = this.state.snake;
-    snake[0].Xpos =
-      snake[0].Xpos >= width - blockWidth ? 0 : snake[0].Xpos + blockWidth;
-    this.setState({ snake });
-  }
-
-  moveHeadDown() {
-    let height = this.state.height;
-    let blockHeight = this.state.blockHeight;
-    let snake = this.state.snake;
-    snake[0].Ypos =
-      snake[0].Ypos >= height - blockHeight ? 0 : snake[0].Ypos + blockHeight;
-    this.setState({ snake });
-  }
-
-  hhandleKeyDown(event: KeyboardEvent) {
-    // if spacebar is pressed to run a new game
-    if (this.state.isGameOver && event.keyCode === 32) {
-      this.resetGame();
+  useEffect(() => {
+    if (!gameStarted || gameOver) {
       return;
     }
 
-    if (this.state.directionChanged) return;
+    const gameLoop = setInterval(() => {
+      if (!canvasRef.current) return;
+      const ctx = canvasRef.current.getContext("2d");
+      if (!ctx) return;
 
-    switch (event.keyCode) {
-      case 37:
-      case 65:
-        this.goLeft();
-        break;
-      case 38:
-      case 87:
-        this.goUp();
-        break;
-      case 39:
-      case 68:
-        this.goRight();
-        break;
-      case 40:
-      case 83:
-        this.goDown();
-        break;
-      default:
-    }
-    this.setState({ directionChanged: true });
-  }
+      let newSegments = [...snakeSegments];
+      let head = {
+        x: newSegments[0].x + direction.x,
+        y: newSegments[0].y + direction.y,
+      };
 
-  goLeft() {
-    let newDirection = this.state.direction === "right" ? "right" : "left";
-    this.setState({ direction: newDirection });
-  }
+      if (
+        newSegments.some(
+          (segment, index) =>
+            index !== 0 && segment.x === head.x && segment.y === head.y
+        )
+      ) {
+        setGameOver(true);
+        return;
+      }
 
-  goUp() {
-    let newDirection = this.state.direction === "down" ? "down" : "up";
-    this.setState({ direction: newDirection });
-  }
+      if (head.x >= 20) head.x = 0;
+      if (head.y >= 20) head.y = 0;
+      if (head.x < 0) head.x = 19;
+      if (head.y < 0) head.y = 19;
 
-  goRight() {
-    let newDirection = this.state.direction === "left" ? "left" : "right";
-    this.setState({ direction: newDirection });
-  }
+      newSegments.unshift(head);
+      if (head.x === apple.x && head.y === apple.y) {
+        setScore((prevScore) => prevScore + 1);
+        setApple({
+          x: Math.floor(Math.random() * 20),
+          y: Math.floor(Math.random() * 20),
+        });
+      } else {
+        newSegments.pop();
+      }
 
-  goDown() {
-    let newDirection = this.state.direction === "up" ? "up" : "down";
-    this.setState({ direction: newDirection });
-  }
+      setSnakeSegments(newSegments);
 
-  render() {
-    // Game over
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
-    const userId = Cookies.get("userId");
+      ctx.fillStyle = "green";
+      snakeSegments.forEach((segment) => {
+        ctx.fillRect(segment.x * 20, segment.y * 20, 20 - 2, 20 - 2);
+      });
 
-    if (this.state.isGameOver) {
-      return (
-        <GameOver
-          width={this.state.width.toString()}
-          height={this.state.height.toString()}
-          highScore={this.state.highScore}
-          newHighScore={this.state.newHighScore}
-          score={this.state.score}
-          userId={userId || ""}
-        />
-      );
-    }
+      ctx.fillStyle = "red";
+      ctx.fillRect(apple.x * 20, apple.y * 20, 20 - 2, 20 - 2);
 
-    return (
-      <div
-        id="GameBoard"
-        style={{
-          width: this.state.width,
-          height: this.state.height,
-          borderWidth: this.state.width / 60, // Increase the border width
-        }}
-      >
-        {this.state.snake.map((snakePart, index) => {
-          return (
-            <div
-              key={index}
-              className="Block"
-              style={{
-                width: this.state.blockWidth,
-                height: this.state.blockHeight,
-                left: snakePart.Xpos,
-                top: snakePart.Ypos,
-                background: this.state.snakeColor,
-              }}
-            />
-          );
-        })}
-        <div
-          className="Block"
-          style={{
-            width: this.state.blockWidth,
-            height: this.state.blockHeight,
-            left: this.state.apple.Xpos,
-            top: this.state.apple.Ypos,
-            background: this.state.appleColor,
-          }}
-        />
-        <div id="Score" style={{ fontSize: this.state.width / 20 }}>
-          HIGH-SCORE: {this.state.highScore}&ensp;&ensp;&ensp;&ensp;SCORE:{" "}
-          {this.state.score}
+      ctx.fillStyle = "white";
+      ctx.font = "20px Arial";
+      ctx.fillText(`Score: ${score}`, 20, 30);
+    }, 1000 / gameSpeed);
+
+    return () => clearInterval(gameLoop);
+  }, [
+    snakeSegments,
+    direction,
+    apple,
+    score,
+    gameSpeed,
+    gameOver,
+    gameStarted,
+  ]);
+
+  return (
+    <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
+      <div className="flex h-full max-h-screen flex-col gap-2">
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+            Snake Game
+          </h1>
+          <a href="/dashboard" className="text-blue-500">
+            Back To Dashboard
+          </a>
+          {!gameOver ? (
+            <>
+              <canvas
+                ref={canvasRef}
+                width="400"
+                height="400"
+                className="mb-4"
+              ></canvas>
+              {!gameOver && (
+                <p className="leading-7 [&:not(:first-child)]:mt-6">
+                  Score: {score}
+                </p>
+              )}
+              <p className="leading-7 [&:not(:first-child)]:mt-6 text-white">
+                You have {currentBalance} McCoins
+              </p>
+              <p className="leading-7 [&:not(:first-child)]:mt-6 text-white">
+                Use Arrow Keys to Start
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl mb-4">
+                Game Over! Your score was: {score}
+              </h2>
+              <button
+                onClick={() => {
+                  const userId = Cookies.get("uid");
+                  get(ref(db, `users/${userId}`)).then((snapshot) => {
+                    var currentMcCoins = snapshot.val().balance;
+                    update(ref(db, `users/${userId}`), {
+                      balance: parseInt(currentMcCoins) + score,
+                    });
+                    setScore(0);
+                    setTimeout(() => {
+                      initializeGame();
+                    });
+                  });
+                }}
+                className="bg-green-500 hover:bg-green-700 text-black font-bold py-2 px-4 rounded"
+              >
+                Redeem McCoins
+              </button>
+            </>
+          )}
         </div>
-        <button onClick={() => this.killSnake()} className="">
-          Kill Snake
-        </button>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-export default SnakeGame;
+export default GamePage;

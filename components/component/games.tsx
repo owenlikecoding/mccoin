@@ -245,10 +245,26 @@ export default function sidebar() {
         </header>
         <main className="flex items-center justify-center min-h-screen">
           <div className="grid grid-cols-2 gap-4">
+            <Card className="p-5 flex flex-col items-center justify-center">
+              <CardTitle className="text-center text-xl font-bold mb-4">
+                Snake Game
+              </CardTitle>
+              <CardDescription>Snake Game</CardDescription>
+              <CardContent className="flex flex-col items-center">
+                <Link href="/snakegame">
+                  <Button className="mb-2">Play</Button>
+                </Link>
+              </CardContent>
+            </Card>
             <Card>
-              <CardTitle>Snake Game</CardTitle>
-              <CardContent>
-                <img src="" alt="" />
+              <CardHeader>
+                <CardTitle className="text-xl font-bold">Math Game</CardTitle>
+                <CardDescription>Test your math skills</CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center justify-center">
+                <Link href="/mathgame">
+                  <Button className="">Play</Button>
+                </Link>
               </CardContent>
             </Card>
           </div>
