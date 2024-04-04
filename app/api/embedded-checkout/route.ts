@@ -25,3 +25,21 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: error.message }, { status: 500 });
     }
 }
+
+export async function GET(request: Request) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const sessionId = searchParams.get('session_id');
+
+        if (!sessionId) {
+            return NextResponse.json({ message: 'Missing session_id' }, { status: 400 });
+        }
+
+        const session = await stripe.checkout.sessions.retrieve(sessionId!);
+
+        return NextResponse.json({ session });
+    } catch (error: any) {
+      console.error(error);
+        return NextResponse.json({ message: error.message }, { status: 500 });
+    }
+}
