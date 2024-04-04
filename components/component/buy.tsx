@@ -99,6 +99,25 @@ export default function Sidebar() {
     }
   };
 
+  const buyLolipop = () => {
+    get(ref(db, "users/" + uid)).then((snapshot) => {
+      const userData = snapshot.val();
+      if(userData.balance > 100) {
+        set(ref(db, "users/" + uid + "/balance"), userData.balance - 100)
+        var randomString = Math.random().toString(36).substring(7);
+        set(ref(db, "purchases/" + randomString), {
+          name: "Lolipop",
+          price: 100,
+          date: new Date().toISOString(),
+          user: uid,
+        })
+      }
+      else {
+        alert("You do not have enough money to buy this item")
+      }
+    });
+  }
+
   useEffect(() => {
     const uid = Cookies.get("uid");
     if (uid) {
@@ -256,7 +275,26 @@ export default function Sidebar() {
           }`}
         >
           <div className="flex flex-col lg:flex-row justify-between">
-            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* Product 1 */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Lolipop</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <img src="/lol.jpeg" />
+                  <CardDescription>
+                    Deliciuos chiniseium lollipop
+                  </CardDescription>
+                  <Button
+                    className="mt-4"
+                    onClick={buyLolipop}
+                  >
+                    Buy
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </main>
       </div>

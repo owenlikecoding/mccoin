@@ -176,6 +176,13 @@ export default function Component() {
       return;
     }
 
+    // Check if the sender is trying to send money to themselves
+    const sender = Cookies.get("uid");
+    if (sender === recipientId) {
+      alert("You cannot send money to yourself.");
+      return;
+    }
+
     // Check if the amount is a valid number
     const amount = parseFloat(transactionDetails.amount);
     if (isNaN(amount)) {
