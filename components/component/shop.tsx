@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import EmbeddedCheckoutButton from "@/app/shop/EmbeddedCheckoutForm";
 import {
   DropdownMenuTrigger,
   DropdownMenuLabel,
@@ -270,9 +271,7 @@ export default function Sidebar() {
                 <p>The payment will take 1-2 hours our admins will update you balance</p>
               </CardHeader>
               <CardContent>
-                <Link href="https://buy.stripe.com/eVaaIn28v3Gk8nudQQ">
-                  <Button>Buy</Button>
-                </Link>
+                <EmbeddedCheckoutButton />
               </CardContent>
             </Card>
           </div>
