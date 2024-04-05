@@ -111,6 +111,7 @@ export default function Sidebar() {
           date: new Date().toISOString(),
           user: uid,
         })
+        alert("Thank You for you purchase of a Lolipop Talk to Owen to get your item")
       }
       else {
         alert("You do not have enough money to buy this item")
@@ -203,7 +204,7 @@ export default function Sidebar() {
               </Link>
               <Link
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                href="#"
+                href="/gamble"
               >
                 <Dice5 className="h-4 w-4" />
                 Gamble
@@ -280,6 +281,7 @@ export default function Sidebar() {
               <Card>
                 <CardHeader>
                   <CardTitle>Lolipop</CardTitle>
+                  <p>100 McCoins</p>
                 </CardHeader>
                 <CardContent>
                   <img src="/lol.jpeg" />

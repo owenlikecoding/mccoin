@@ -66,9 +66,61 @@ const db = getDatabase(app);
 
 const uid = Cookies.get("uid");
 
+const gamb = () => {};
+
 get(ref(db, "users/" + uid)).then((snapshot) => {
   console.log(snapshot.val());
 });
+
+const GambleComponent = () => {
+  const [mcCoins, setMcCoins] = useState(0);
+  const [multiplier, setMultiplier] = useState(0);
+
+  const handleMcCoinsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMcCoins(Number(event.target.value));
+  };
+
+  const handleMultiplierChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setMultiplier(Number(event.target.value));
+  };
+
+  const gamb = () => {
+    if (mcCoins > 0 && multiplier > 0) {
+      let sigma = multiplier * 100;
+      let random = Math.floor(Math.random() * 100) + 1;
+      console.log(random);
+      console.log(sigma);
+      if (random == sigma) {
+        alert("You won " + mcCoins * multiplier + " McCoins");
+      } else {
+        alert("You lost " + mcCoins + " McCoins");
+      }
+    } else {
+      alert("Please enter valid values for McCoins and Multiplier");
+    }
+  };
+
+  return (
+    <div>
+      <Input
+        type="number"
+        placeholder="McCoins On The Table"
+        onChange={handleMcCoinsChange}
+      />
+      <Input
+        type="number"
+        placeholder="Multiplier"
+        onChange={handleMultiplierChange}
+        className="mt-2"
+      />
+      <Button onClick={gamb} className="mt-2">
+        Gamble
+      </Button>
+    </div>
+  );
+};
 
 // Rename the function to start with an uppercase letter
 // Rename the function to start with an uppercase letter
@@ -148,7 +200,7 @@ export default function Sidebar() {
           <div className="flex-1 overflow-auto py-2">
             <nav className="grid items-start px-4 text-sm font-medium">
               <Link
-                className="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900  transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                 href="/dashboard"
               >
                 <HomeIcon className="h-4 w-4" />
@@ -176,7 +228,7 @@ export default function Sidebar() {
                 Buy
               </Link>
               <Link
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                className="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900  transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50"
                 href="/gamble"
               >
                 <Dice5 className="h-4 w-4" />
@@ -243,40 +295,16 @@ export default function Sidebar() {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main
-          className={`flex-1 p-4 md:p-6 flex justify-center items-center ${
-            modal ? "hidden" : ""
-          }`}
-        >
-          <div className="flex flex-col lg:flex-row justify-between">
-            <div>
+        <main className="flex justify-center items-center h-screen">
+          <Card>
+            <CardHeader>
               <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                Sup {username}
+                Gamble Your McCoins
               </h1>
-              <p className="leading-7 [&:not(:first-child)]:mt-6">
-                You have <span className="font-semibold">{balance}</span>{" "}
-                McCoins
-              </p>
-              <Link href="/transactionInside">
-                <Button className="mt-2">Create Transaction</Button>
-              </Link>
-              <Button color="primary" onClick={toggle} className="m-1">
-                Show Recent Transactions
-              </Button>
-
-              <Modal isOpen={modal} toggle={toggle}>
-                <ModalHeader toggle={toggle}>Recent Transactions</ModalHeader>
-                <ModalBody>
-                  <RecentTransactions />
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="secondary" onClick={toggle}>
-                    Close
-                  </Button>
-                </ModalFooter>
-              </Modal>
-            </div>
-          </div>
+              <GambleComponent />
+              <p className="text-sm ">The amount you put it is the amount yout account will loose, the chance of you winning is 1 in the multiplier X 100</p>
+            </CardHeader>
+          </Card>
         </main>
       </div>
     </div>
@@ -420,69 +448,6 @@ function SearchIcon(props: Package2IconProps) {
     >
       <circle cx="11" cy="11" r="8" />
       <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-}
-
-function ArrowLeftIcon(props: Package2IconProps) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m12 19-7-7 7-7" />
-      <path d="M19 12H5" />
-    </svg>
-  );
-}
-
-function CalendarClockIcon(props: Package2IconProps) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" />
-      <path d="M16 2v4" />
-      <path d="M8 2v4" />
-      <path d="M3 10h5" />
-      <path d="M17.5 17.5 16 16.25V14" />
-      <path d="M22 16a6 6 0 1 1-12 0 6 6 0 0 1 12 0Z" />
-    </svg>
-  );
-}
-
-function mountinIcon(props: Package2IconProps) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M6 9l6 6 6-6" />
     </svg>
   );
 }
