@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAnalytics } from "firebase/analytics";
-``;
 
 import {
   DropdownMenuTrigger,
@@ -66,8 +65,11 @@ const app = initializeApp(firebaseConfig);
 interface Package2IconProps extends React.SVGProps<SVGSVGElement> {}
 
 const db = getDatabase(app);
-
-const analytics = getAnalytics(app);
+// Check if window is defined (i.e., we are in a browser environment)
+if (typeof window !== 'undefined') {
+  // Your code that uses window here
+  const analytics = getAnalytics(app);
+ }
 
 const uid = Cookies.get("uid");
 
