@@ -100,6 +100,8 @@ const GambleComponent = () => {
             var newbalance = parseInt(userdata.balance) + mcCoins * multiplier;
             set(ref(db, "users/" + uid), {
               balance: newbalance,
+            }).then(() => {
+              window.location.reload(); // Reload the page after the update
             });
           }
         });
@@ -111,6 +113,8 @@ const GambleComponent = () => {
             var newbalance = parseInt(userdata.balance) - mcCoins;
             update(ref(db, "users/" + uid), {
               balance: newbalance,
+            }).then(() => {
+              window.location.reload(); // Reload the page after the update
             });
           }
         });
@@ -229,7 +233,7 @@ export default function Sidebar() {
                 href="/shop"
               >
                 <LineChartIcon className="h-4 w-4" />
-                Shop
+                Buy McCoins
               </Link>
               <Link
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
@@ -319,6 +323,7 @@ export default function Sidebar() {
               <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                 Gamble Your McCoins
               </h1>
+              <img src="gamb.jpeg" alt=""  width="400"/>
               <GambleComponent />
               <p className="text-sm ">
                 The amount you put it is the amount yout account will loose, the

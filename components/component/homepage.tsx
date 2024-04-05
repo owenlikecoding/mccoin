@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getAnalytics } from "firebase/analytics";
+``;
+
 import {
   DropdownMenuTrigger,
   DropdownMenuLabel,
@@ -63,6 +66,8 @@ const app = initializeApp(firebaseConfig);
 interface Package2IconProps extends React.SVGProps<SVGSVGElement> {}
 
 const db = getDatabase(app);
+
+const analytics = getAnalytics(app);
 
 const uid = Cookies.get("uid");
 
@@ -159,7 +164,7 @@ export default function Sidebar() {
                 href="/shop"
               >
                 <LineChartIcon className="h-4 w-4" />
-                Shop
+                Buy McCoins
               </Link>
               <Link
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
