@@ -74,7 +74,6 @@ export default async function CheckoutReturn({
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
             Thank You For You business!
           </h1>
-          <p className="">We don't make alot of money so this means alot</p>
           <a href="/dashboard"><Button>Update Account And Return Home</Button></a>
           
         </Card>
