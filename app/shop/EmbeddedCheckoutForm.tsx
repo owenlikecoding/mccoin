@@ -6,6 +6,9 @@ import {
 } from "@stripe/react-stripe-js";
 import { useCallback, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import Cookies from 'js-cookie';
+
+const uid = Cookies.get('uid');
 
 export default function EmbeddedCheckoutButton() {
   const stripePromise = loadStripe(
@@ -21,7 +24,7 @@ export default function EmbeddedCheckoutButton() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ priceId: "price_1OyyHtBEkzmgVjPEtQVfwOSh" }),
+      body: JSON.stringify({ priceId: "price_1OyyHtBEkzmgVjPEtQVfwOSh", uid: uid}),
     })
       .then((res) => {
         if (!res.ok) {

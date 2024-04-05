@@ -266,13 +266,10 @@ export default function Sidebar() {
                     opacity: 0.5, // Adjust the opacity as needed
                   }}
                 >
-                  10 Dollars
+                  10 US Dollars
                 </p>
-                <p>The payment will take 1-2 hours our admins will update you balance</p>
-              </CardHeader>
-              <CardContent>
                 <EmbeddedCheckoutButton />
-              </CardContent>
+              </CardHeader>
             </Card>
           </div>
         </main>
