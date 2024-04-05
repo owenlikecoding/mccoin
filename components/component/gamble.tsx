@@ -94,8 +94,26 @@ const GambleComponent = () => {
       console.log(sigma);
       if (random == sigma) {
         alert("You won " + mcCoins * multiplier + " McCoins");
+        get(ref(db, "users/" + uid)).then((snapshot) => {
+          var userdata = snapshot.val();
+          if (userdata && userdata.balance !== undefined) {
+            var newbalance = parseInt(userdata.balance) + mcCoins * multiplier;
+            set(ref(db, "users/" + uid), {
+              balance: newbalance,
+            });
+          }
+        });
       } else {
         alert("You lost " + mcCoins + " McCoins");
+        get(ref(db, "users/" + uid)).then((snapshot) => {
+          var userdata = snapshot.val();
+          if (userdata && userdata.balance !== undefined) {
+            var newbalance = parseInt(userdata.balance) - mcCoins;
+            set(ref(db, "users/" + uid), {
+              balance: newbalance,
+            });
+          }
+        });
       }
     } else {
       alert("Please enter valid values for McCoins and Multiplier");
@@ -302,7 +320,10 @@ export default function Sidebar() {
                 Gamble Your McCoins
               </h1>
               <GambleComponent />
-              <p className="text-sm ">The amount you put it is the amount yout account will loose, the chance of you winning is 1 in the multiplier X 100</p>
+              <p className="text-sm ">
+                The amount you put it is the amount yout account will loose, the
+                chance of you winning is 1 in the multiplier X 100
+              </p>
             </CardHeader>
           </Card>
         </main>
