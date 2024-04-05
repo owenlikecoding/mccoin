@@ -33,7 +33,7 @@ import { getAuth, signOut } from "firebase/auth";
 import Cookies from "js-cookie";
 
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, get } from "firebase/database";
+import { getDatabase, ref, set, get, update } from "firebase/database";
 
 import { useEffect, useState } from "react";
 
@@ -109,7 +109,7 @@ const GambleComponent = () => {
           var userdata = snapshot.val();
           if (userdata && userdata.balance !== undefined) {
             var newbalance = parseInt(userdata.balance) - mcCoins;
-            set(ref(db, "users/" + uid), {
+            update(ref(db, "users/" + uid), {
               balance: newbalance,
             });
           }
