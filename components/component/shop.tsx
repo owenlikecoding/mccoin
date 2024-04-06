@@ -259,7 +259,7 @@ export default function Sidebar() {
           <div className="flex flex-col lg:flex-row justify-between">
             <Card className="">
               <CardHeader>
-                <CardTitle>1,000,000 McCoins</CardTitle>
+                <CardTitle>10,000 McCoins</CardTitle>
                 <p
                   style={{
                     transition: "opacity 0.5s ease-in-out",

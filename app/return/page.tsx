@@ -58,7 +58,7 @@ export default async function CheckoutReturn({
       var userdata = snapshot.val();
       console.log(userdata);
       if (userdata && userdata.balance !== undefined) {
-        var newbalance = parseInt(userdata.balance) + 1000000;
+        var newbalance = parseInt(userdata.balance) + 10000;
         update(ref(db, "users/" + uid), {
           balance: newbalance,
         });
