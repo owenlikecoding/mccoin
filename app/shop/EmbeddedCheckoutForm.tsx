@@ -24,7 +24,7 @@ export default function EmbeddedCheckoutButton() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ priceId: "price_1OyydWBEkzmgVjPEQC3jSb9D", uid: uid}),
+      body: JSON.stringify({ priceId: "price_1P2OkgBEkzmgVjPE4TZSyvNh", uid: uid}),
     })
       .then((res) => {
         if (!res.ok) {
