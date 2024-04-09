@@ -37,7 +37,7 @@ const GamePage: React.FC = () => {
   });
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [gameStarted, setGameStarted] = useState<boolean>(false);
-  const [gameSpeed] = useState<number>(8);
+  const [gameSpeed] = useState<number>(16);
   const [currentBalance, setCurrentBalance] = useState<number>(0);
 
   useEffect(() => {
@@ -76,17 +76,51 @@ const GamePage: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       setGameStarted(true);
       switch (e.key) {
-        case "ArrowLeft":
-          if (direction.x !== 1) setDirection({ x: -1, y: 0 });
-          break;
-        case "ArrowUp":
+        case "w":
+        case "W":
           if (direction.y !== 1) setDirection({ x: 0, y: -1 });
           break;
-        case "ArrowRight":
+        case "a":
+        case "A":
+          if (direction.x !== 1) setDirection({ x: -1, y: 0 });
+          break;
+        case "s":
+        case "S":
+          if (direction.y !== -1) setDirection({ x: 0, y: 1 });
+          break;
+        case "d":
+        case "D":
           if (direction.x !== -1) setDirection({ x: 1, y: 0 });
           break;
+      }
+    };
+
+
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [direction]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      setGameStarted(true);
+      switch (e.key) {
+        case "ArrowUp":
+        case "Up":
+          if (direction.y !== 1) setDirection({ x: 0, y: -1 });
+          break;
+        case "ArrowLeft":
+        case "Left":
+          if (direction.x !== 1) setDirection({ x: -1, y: 0 });
+          break;
         case "ArrowDown":
+        case "Down":
           if (direction.y !== -1) setDirection({ x: 0, y: 1 });
+          break;
+        case "ArrowRight":
+        case "Right":
+          if (direction.x !== -1) setDirection({ x: 1, y: 0 });
           break;
       }
     };
@@ -194,7 +228,7 @@ const GamePage: React.FC = () => {
                 You have {currentBalance} McCoins
               </p>
               <p className="leading-7 [&:not(:first-child)]:mt-6 text-white">
-                Use Arrow Keys to Start
+                Use W, A, S, D to Start
               </p>
             </>
           ) : (
