@@ -73,11 +73,17 @@ get(ref(db, "users/" + uid)).then((snapshot) => {
 });
 
 const GambleComponent = () => {
+  const [userBalance, setUserBalance] = useState(0);
   const [mcCoins, setMcCoins] = useState(0);
   const [multiplier, setMultiplier] = useState(0);
 
   const handleMcCoinsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMcCoins(Number(event.target.value));
+    const enteredAmount = Number(event.target.value);
+    if (enteredAmount <= userBalance) {
+      setMcCoins(enteredAmount);
+    } else {
+      alert("You cannot bet more McCoins than you have.");
+    }
   };
 
   const handleMultiplierChange = (
@@ -85,6 +91,18 @@ const GambleComponent = () => {
   ) => {
     setMultiplier(Number(event.target.value));
   };
+
+  useEffect(() => {
+    const uid = Cookies.get("uid");
+    if (uid) {
+      get(ref(db, "users/" + uid)).then((snapshot) => {
+        const userData = snapshot.val();
+        if (userData && userData.balance) {
+          setUserBalance(userData.balance);
+        }
+      });
+    }
+  }, []);
 
   const gamb = () => {
     if (mcCoins > 0 && multiplier > 0) {
@@ -98,7 +116,7 @@ const GambleComponent = () => {
           var userdata = snapshot.val();
           if (userdata && userdata.balance !== undefined) {
             var newbalance = parseInt(userdata.balance) + mcCoins * multiplier;
-            set(ref(db, "users/" + uid), {
+            update(ref(db, "users/" + uid), {
               balance: newbalance,
             }).then(() => {
               window.location.reload(); // Reload the page after the update
@@ -325,7 +343,7 @@ export default function Sidebar() {
               <img src="gamb.jpeg" alt="" width="400" />
               <GambleComponent />
               <p className="text-sm ">
-              Its A 1 and 30 chance
+                Its A 1 and 30 chance
               </p>
             </CardHeader>
           </Card>
