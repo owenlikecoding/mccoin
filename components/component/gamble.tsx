@@ -60,13 +60,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-interface Package2IconProps extends React.SVGProps<SVGSVGElement> {}
+interface Package2IconProps extends React.SVGProps<SVGSVGElement> { }
 
 const db = getDatabase(app);
 
 const uid = Cookies.get("uid");
 
-const gamb = () => {};
+const gamb = () => { };
 
 get(ref(db, "users/" + uid)).then((snapshot) => {
   console.log(snapshot.val());
@@ -88,8 +88,8 @@ const GambleComponent = () => {
 
   const gamb = () => {
     if (mcCoins > 0 && multiplier > 0) {
-      let sigma = multiplier * 100;
-      let random = Math.floor(Math.random() * 100) + 1;
+      let sigma = multiplier * 1;
+      let random = Math.floor(Math.random() * 30) + 1; // Changed to 30 for 1 in 30 odds
       console.log(random);
       console.log(sigma);
       if (random == sigma) {
@@ -203,9 +203,8 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`grid min-h-screen w-full lg:grid-cols-[280px_1fr] ${
-        modal ? "hidden" : ""
-      }`}
+      className={`grid min-h-screen w-full lg:grid-cols-[280px_1fr] ${modal ? "hidden" : ""
+        }`}
     >
       <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
         <div className="flex h-full max-h-screen flex-col gap-2">
@@ -323,11 +322,10 @@ export default function Sidebar() {
               <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                 Gamble Your McCoins
               </h1>
-              <img src="gamb.jpeg" alt=""  width="400"/>
+              <img src="gamb.jpeg" alt="" width="400" />
               <GambleComponent />
               <p className="text-sm ">
-                The amount you put it is the amount yout account will loose, the
-                chance of you winning is 1 in the multiplier X 100
+              Its A 1 and 30 chance
               </p>
             </CardHeader>
           </Card>
