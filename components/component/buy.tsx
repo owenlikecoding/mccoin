@@ -102,12 +102,12 @@ export default function Sidebar() {
   const buyLolipop = () => {
     get(ref(db, "users/" + uid)).then((snapshot) => {
       const userData = snapshot.val();
-      if(userData.balance > 100) {
-        set(ref(db, "users/" + uid + "/balance"), userData.balance - 100)
+      if(userData.balance > 250) {
+        set(ref(db, "users/" + uid + "/balance"), userData.balance - 250)
         var randomString = Math.random().toString(36).substring(7);
         set(ref(db, "purchases/" + randomString), {
           name: "Lolipop",
-          price: 100,
+          price: 250,
           date: new Date().toISOString(),
           user: uid,
         })
@@ -281,7 +281,7 @@ export default function Sidebar() {
               <Card>
                 <CardHeader>
                   <CardTitle>Lolipop</CardTitle>
-                  <p>100 McCoins</p>
+                  <p>250 McCoins</p>
                 </CardHeader>
                 <CardContent>
                   <img src="/lol.jpeg" />
