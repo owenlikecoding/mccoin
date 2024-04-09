@@ -97,11 +97,11 @@ export default function Component() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 flex justify-center items-center">
+    <div className="min-h-screen bg-gray-950 text-gray-100 flex justify-center items-center">
       {isLoading ? (
         <div>Loading...</div> // Replace this with your preferred loading indicator
       ) : (
-        <div className="max-w-lg w-full bg-gray-800 rounded-lg shadow-2xl overflow-hidden p-8">
+        <div className="max-w-lg w-full bg-gray-900 rounded-lg shadow-2xl overflow-hidden p-8">
           <div className="text-center mb-8">
             <span className="text-2xl font-semibold text-gray-100 block">
               Sign In to McCoin
@@ -118,6 +118,7 @@ export default function Component() {
               <input
                 id="email"
                 type="email"
+                autoComplete="email"
                 placeholder="Enter your email"
                 required
                 value={email}
@@ -135,6 +136,7 @@ export default function Component() {
               <input
                 id="password"
                 type="password"
+                autoComplete="current-password"
                 placeholder="Password"
                 required
                 value={password}

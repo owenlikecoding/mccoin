@@ -9,11 +9,11 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
-import { getDatabase, set, ref,get, update } from "firebase/database";
+import { getDatabase, set, ref, get, update } from "firebase/database";
 import Cookies from "js-cookie";
 
-interface MountainIconProps extends React.SVGProps<SVGSVGElement> {}
-interface error extends Error {}
+interface MountainIconProps extends React.SVGProps<SVGSVGElement> { }
+interface error extends Error { }
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXn34NBurMAMvApEOTrASF_JxEm5dEkDY",
@@ -98,6 +98,7 @@ export default function Component() {
         name: name,
         email: email,
         profile_picture: "/def.svg",
+        balance: 0,
       });
       Cookies.set("uid", userCredential.user.uid);
       setTimeout(() => {
@@ -112,8 +113,8 @@ export default function Component() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 flex justify-center items-center">
-      <div className="max-w-lg w-full bg-gray-800 rounded-lg shadow-2xl overflow-hidden p-8">
+    <div className="min-h-screen bg-gray-950 text-gray-100 flex justify-center items-center">
+      <div className="max-w-lg w-full bg-gray-900 rounded-lg shadow-2xl overflow-hidden p-8">
         <div className="text-center mb-8">
           <span className="text-2xl font-semibold text-gray-100 block">
             Create a McCoin Account
@@ -130,6 +131,7 @@ export default function Component() {
             <input
               id="name"
               type="text"
+              autoComplete="name"
               placeholder="Enter your name"
               required
               value={name}
@@ -147,6 +149,7 @@ export default function Component() {
             <input
               id="email"
               type="email"
+              autoComplete="email"
               placeholder="Enter your email"
               required
               value={email}
@@ -162,6 +165,7 @@ export default function Component() {
               Password
             </label>
             <input
+              autoComplete="new-password"
               id="password"
               type="password"
               placeholder="Password"
@@ -182,6 +186,7 @@ export default function Component() {
               id="confirm-password"
               type="password"
               placeholder="Confirm Password"
+              autoCapitalize="none"
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -191,7 +196,7 @@ export default function Component() {
           <div>
             <button
               type="submit"
-              className="w-full py-3 mt-4 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="w-full py-3 mt-4 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
             >
               Sign Up
             </button>
