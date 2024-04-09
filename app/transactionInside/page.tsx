@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   CardTitle,
   CardDescription,
@@ -73,6 +74,7 @@ export default function Component() {
       const users = snapshot.val();
       const names = Object.keys(users).map((key) => users[key].name);
       setUserNames(names);
+      setFilteredNames(names); // Directly set filtered names to userNames
     };
 
     onValue(usersRef, handleUsers);
@@ -128,8 +130,6 @@ export default function Component() {
         sender,
         recipient,
         amount,
-        description,
-        category,
         date: currentDate, // Set the date here
       });
 
@@ -146,11 +146,13 @@ export default function Component() {
     const { name, value } = event.target;
     if (name === "name") {
       setNameInputValue(value);
-      const filtered = userNames.filter((name) => name);
+      // Filter userNames based on the current input value
+      const filtered = userNames.filter((name) => name.toLowerCase().includes(value.toLowerCase()));
       setFilteredNames(filtered);
     }
     setTransactionDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
   };
+
   const getUserIdByName = async (name: string): Promise<string | null> => {
     const usersRef = ref(db, "users");
     const snapshot = await get(usersRef);
@@ -225,7 +227,7 @@ export default function Component() {
                     onClick={() => setNameInputValue(name)}
                     className="cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent"
                   >
-                    {name.length > 20 ? `${name.substring(0, 20)}...` : name}
+                    {name} {/* Display the full name */}
                   </li>
                 ))}
               </ul>
@@ -249,6 +251,12 @@ export default function Component() {
             >
               Submit
             </Button>
+            <Link href="/dashboard">
+            <Button className="ml-2 font-bold" type="button">
+              Back
+            </Button>
+            </Link>
+            
           </CardFooter>
         </form>
       </Card>

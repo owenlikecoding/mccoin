@@ -69,3 +69,19 @@ body {
   background-color: #3498db; /* Blue color for the loading animation */
   animation: loading 2s linear infinite; /* Adjust the animation duration as needed */
  }
+
+ .font-roboto-mono {
+  font-family: 'Roboto Mono', monospace;
+ }
+
+ .mobile-note {
+  display: none;
+  color: red;
+ }
+ 
+ @media (max-width: 768px) {
+  .mobile-note {
+     display: block;
+  }
+ }
+

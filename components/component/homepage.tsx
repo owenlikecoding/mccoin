@@ -30,7 +30,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 import { ResponsiveLine } from "@nivo/line";
 import { ResponsivePie } from "@nivo/pie";
-import { Dice1, Dice5, Dice6, MountainIcon } from "lucide-react";
+import { Dice1, Dice5, Dice6, MountainIcon, Weight } from "lucide-react";
 import { getAuth, signOut } from "firebase/auth";
 import Cookies from "js-cookie";
 
@@ -48,6 +48,9 @@ import {
 } from "reactstrap";
 
 import { RecentTransactions } from "./recentTransactions";
+import { Roboto_Mono } from "next/font/google";
+
+const rm = Roboto_Mono({ weight: '400', subsets: ['latin', 'latin-ext'] });
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXn34NBurMAMvApEOTrASF_JxEm5dEkDY",
@@ -62,14 +65,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-interface Package2IconProps extends React.SVGProps<SVGSVGElement> {}
+interface Package2IconProps extends React.SVGProps<SVGSVGElement> { }
 
 const db = getDatabase(app);
 // Check if window is defined (i.e., we are in a browser environment)
 if (typeof window !== 'undefined') {
   // Your code that uses window here
   const analytics = getAnalytics(app);
- }
+}
 
 const uid = Cookies.get("uid");
 
@@ -85,6 +88,22 @@ export default function Sidebar() {
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(true); // Add loading state
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
+  const greetings = ["Sup", "Hello", "Hi", "Hey", "Yo", "Greetings", "Howdy", "Hola", "Bonjour", "Ciao"];
+  const [randomGreeting, setRandomGreeting] = useState("");
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * greetings.length);
+    setRandomGreeting(greetings[randomIndex]);
+
+    // Set up an interval to change the greeting every 5 seconds
+    const intervalId = setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * greetings.length);
+      setRandomGreeting(greetings[randomIndex]);
+    }, 3000); // 5000 milliseconds = 5 seconds
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array means this effect runs once on mount
 
   const toggle = () => setModal(!modal);
 
@@ -136,9 +155,8 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`grid min-h-screen w-full lg:grid-cols-[280px_1fr] ${
-        modal ? "hidden" : ""
-      }`}
+      className={`grid min-h-screen w-full lg:grid-cols-[280px_1fr] ${modal ? "hidden" : ""
+        }`}
     >
       <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
         <div className="flex h-full max-h-screen flex-col gap-2">
@@ -147,10 +165,7 @@ export default function Sidebar() {
               <MountainIcon className="h-6 w-6" />
               <span className="">McCoin 1.0</span>
             </Link>
-            <Button className="ml-auto h-8 w-8" size="icon" variant="outline">
-              <BellIcon className="h-4 w-4" />
-              <span className="sr-only">Toggle notifications</span>
-            </Button>
+
           </div>
           <div className="flex-1 overflow-auto py-2">
             <nav className="grid items-start px-4 text-sm font-medium">
@@ -200,16 +215,7 @@ export default function Sidebar() {
             <span className="sr-only">Home</span>
           </Link>
           <div className="w-full flex-1">
-            <form>
-              <div className="relative">
-                <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
-                <Input
-                  className="w-full bg-white shadow-none appearance-none pl-8 md:w-2/3 lg:w-1/3 dark:bg-gray-950"
-                  placeholder="Search"
-                  type="search"
-                />
-              </div>
-            </form>
+
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -251,19 +257,23 @@ export default function Sidebar() {
           </DropdownMenu>
         </header>
         <main
-          className={`flex-1 p-4 md:p-6 flex justify-center items-center ${
-            modal ? "hidden" : ""
-          }`}
+          className={`flex-1 p-4 md:p-6 flex justify-center items-center ${modal ? "hidden" : ""
+            }`}
         >
           <div className="flex flex-col lg:flex-row justify-between">
             <div>
-              <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                Sup {username}
-              </h1>
-              <p className="leading-7 [&:not(:first-child)]:mt-6">
-                You have <span className="font-semibold">{balance}</span>{" "}
+              <div className="greeting-container">
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                  {randomGreeting} {username}
+                </h1>
+              </div>
+              <p className="leading-7 [&:not(:first-child)]:mt-6 font-roboto-mono">
+                You have <span className="font-semibold" >{balance}</span>{" "}
                 McCoins
               </p>
+              <div className="mobile-note">
+                <p>Some features may not be available on mobile</p>
+              </div>
               <Link href="/transactionInside">
                 <Button className="mt-2">Create Transaction</Button>
               </Link>
@@ -271,16 +281,17 @@ export default function Sidebar() {
                 Show Recent Transactions
               </Button>
 
-              <Modal isOpen={modal} toggle={toggle}>
-                <ModalHeader toggle={toggle}>Recent Transactions</ModalHeader>
-                <ModalBody>
-                  <RecentTransactions />
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="secondary" onClick={toggle}>
-                    Close
-                  </Button>
-                </ModalFooter>
+              <Modal isOpen={modal} toggle={toggle} className="flex items-center justify-center min-h-screen">
+                <div className="bg-zinc-500 p-6 rounded shadow-lg">
+                  <ModalBody>
+                    <RecentTransactions />
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="secondary" onClick={toggle} className="mt-2">
+                      Close
+                    </Button>
+                  </ModalFooter>
+                </div>
               </Modal>
             </div>
           </div>
