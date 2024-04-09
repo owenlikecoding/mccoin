@@ -35,6 +35,7 @@ const MathGamePage: React.FC = () => {
   const [score, setScore] = useState<number>(0); // New state for score
   const [timeLeft, setTimeLeft] = useState<number>(10); // New state for countdown
   const [questionsAnswered, setQuestionsAnswered] = useState<number>(0); // New state to track questions answered
+  const [isCheckAnswerDisabled, setIsCheckAnswerDisabled] = useState<boolean>(false);
 
   useEffect(() => {
     generateNewProblem();
@@ -64,13 +65,13 @@ const MathGamePage: React.FC = () => {
   const Reedeem = () => {
     const userId = Cookie.get("uid");
     get(ref(db, 'users/' + userId)).then((snapshot) => {
-        const data = snapshot.val();
-        const newBalance = parseInt(data.balance, 10) + score;
-        update(ref(db, 'users/' + userId), { balance: newBalance });
-        alert(`You have successfully redeemed ${score} McCoins!`);
-        setTimeout(() => {
-            window.location.href = "/dashboard";
-        }, 500);
+      const data = snapshot.val();
+      const newBalance = parseInt(data.balance, 10) + score;
+      update(ref(db, 'users/' + userId), { balance: newBalance });
+      alert(`You have successfully redeemed ${score} McCoins!`);
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 500);
     });
 
   }
@@ -80,8 +81,11 @@ const MathGamePage: React.FC = () => {
     if (userAnswer === answer) {
       setScore(score + 1); // Increment score if answer is correct
     }
+
     setQuestionsAnswered(questionsAnswered + 1); // Increment questions answered
-    if (questionsAnswered < 5) {
+    if (questionsAnswered >= 5) {
+      setIsCheckAnswerDisabled(true); // Disable the check answer button after 5 questions
+    } else {
       generateNewProblem(); // Generate a new problem if not all questions have been answered
     }
   };
@@ -124,6 +128,7 @@ const MathGamePage: React.FC = () => {
             />
             <button
               onClick={checkAnswer}
+              disabled={isCheckAnswerDisabled} // Disable the button based on the state
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
             >
               Check Answer
