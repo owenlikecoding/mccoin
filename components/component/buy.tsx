@@ -28,7 +28,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 import { ResponsiveLine } from "@nivo/line";
 import { ResponsivePie } from "@nivo/pie";
-import { Dice1, Dice5, Dice6, MountainIcon } from "lucide-react";
+import { Dice1, Dice5, Dice6, MountainIcon, Menu } from "lucide-react";
 import { getAuth, signOut } from "firebase/auth";
 import Cookies from "js-cookie";
 
@@ -67,7 +67,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-interface Package2IconProps extends React.SVGProps<SVGSVGElement> {}
+interface Package2IconProps extends React.SVGProps<SVGSVGElement> { }
 
 const db = getDatabase(app);
 
@@ -102,14 +102,14 @@ export default function Sidebar() {
   const buyLolipop = () => {
     get(ref(db, "users/" + uid)).then((snapshot) => {
       const userData = snapshot.val();
-      if(userData.balance > 250) {
+      if (userData.balance > 250) {
         set(ref(db, "users/" + uid + "/balance"), userData.balance - 250)
         var randomString = Math.random().toString(36).substring(7);
         set(ref(db, "purchases/" + randomString), {
           name: "Lolipop",
           price: 250,
           date: new Date().toISOString(),
-          user: uid,
+          user: username,
         })
         alert("Thank You for you purchase of a Lolipop Talk to Owen to get your item")
       }
@@ -119,8 +119,34 @@ export default function Sidebar() {
     });
   }
 
+  const usernamefordata = get(ref(db, "users/" + uid + "/name"));
+  console.log(usernamefordata)
+
+  const buyCoke = () => {
+    get(ref(db, "users/" + uid)).then((snapshot) => {
+      const userData = snapshot.val();
+      if (userData.balance > 3000) {
+        set(ref(db, "users/" + uid + "/balance"), userData.balance - 3000)
+        var randomString = Math.random().toString(36).substring(7);
+        set(ref(db, "purchases/" + randomString), {
+          name: "Coke",
+          price: 3000,
+          date: new Date().toISOString(),
+          user: username,
+        })
+        alert("Thank You for you purchase of a Soda Talk to Owen to get your item")
+      }
+      else {
+        alert("You do not have enough money to buy this item")
+      }
+    });
+  }
+
   useEffect(() => {
+
     const uid = Cookies.get("uid");
+    const usernamefordata = get(ref(db, "users/" + uid + "/name"));
+    console.log(usernamefordata)
     if (uid) {
       setLoading(true); // Set loading to true before fetching data
       get(ref(db, "users/" + uid)).then((snapshot) => {
@@ -156,9 +182,8 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`grid min-h-screen w-full lg:grid-cols-[280px_1fr] ${
-        modal ? "hidden" : ""
-      }`}
+      className={`grid min-h-screen w-full lg:grid-cols-[280px_1fr] ${modal ? "hidden" : ""
+        }`}
     >
       <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
         <div className="flex h-full max-h-screen flex-col gap-2">
@@ -215,8 +240,8 @@ export default function Sidebar() {
       </div>
       <div className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
-          <Link className="lg:hidden" href="#">
-            <Package2Icon className="h-6 w-6" />
+        <Link className="lg:hidden" href="/mobileNavbar">
+            <Menu className="h-6 w-6" />
             <span className="sr-only">Home</span>
           </Link>
           <div className="w-full flex-1">
@@ -271,9 +296,8 @@ export default function Sidebar() {
           </DropdownMenu>
         </header>
         <main
-          className={`flex-1 p-4 md:p-6 flex justify-center items-center ${
-            modal ? "hidden" : ""
-          }`}
+          className={`flex-1 p-4 md:p-6 flex justify-center items-center ${modal ? "hidden" : ""
+            }`}
         >
           <div className="flex flex-col lg:flex-row justify-between">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -291,6 +315,24 @@ export default function Sidebar() {
                   <Button
                     className="mt-4"
                     onClick={buyLolipop}
+                  >
+                    Buy
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Mini Soda</CardTitle>
+                  <p>3000 McCoins</p>
+                </CardHeader>
+                <CardContent>
+                  <img src="/coke.png" style={{ width: '300px', height: '170px' }} />
+                  <CardDescription>
+                    A small soda
+                  </CardDescription>
+                  <Button
+                    className="mt-4"
+                    onClick={buyCoke}
                   >
                     Buy
                   </Button>

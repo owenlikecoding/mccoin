@@ -30,7 +30,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 import { ResponsiveLine } from "@nivo/line";
 import { ResponsivePie } from "@nivo/pie";
-import { Dice1, Dice5, Dice6, MountainIcon } from "lucide-react";
+import { Dice1, Dice5, Dice6, MountainIcon, Menu } from "lucide-react";
 import { getAuth, signOut } from "firebase/auth";
 import Cookies from "js-cookie";
 
@@ -62,7 +62,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-interface Package2IconProps extends React.SVGProps<SVGSVGElement> {}
+interface Package2IconProps extends React.SVGProps<SVGSVGElement> { }
 
 const db = getDatabase(app);
 
@@ -129,9 +129,8 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`grid min-h-screen w-full lg:grid-cols-[280px_1fr] ${
-        modal ? "hidden" : ""
-      }`}
+      className={`grid min-h-screen w-full lg:grid-cols-[280px_1fr] ${modal ? "hidden" : ""
+        }`}
     >
       <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
         <div className="flex h-full max-h-screen flex-col gap-2">
@@ -188,8 +187,8 @@ export default function Sidebar() {
       </div>
       <div className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
-          <Link className="lg:hidden" href="#">
-            <Package2Icon className="h-6 w-6" />
+          <Link className="lg:hidden" href="/mobileNavbar">
+            <Menu className="h-6 w-6" />
             <span className="sr-only">Home</span>
           </Link>
           <div className="w-full flex-1">
