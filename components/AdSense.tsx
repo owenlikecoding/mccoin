@@ -1,11 +1,9 @@
 import React from 'react';
 import Script from 'next/script';
 
-type AdsenseTypes = {
-    pId: string;
-}
 
-const AdSense = ({ pId }: AdsenseTypes) => {
+
+const AdSense = () => {
     const [scriptLoaded, setScriptLoaded] = React.useState(false);
 
     const handleScriptLoad = () => {
