@@ -37,7 +37,7 @@ export default function Admin() {
 
     useEffect(() => {
         const uidCookie = Cookies.get('uid');
-        if (uidCookie && uidCookie === 'l9k2FHAlGwPfEVJlInMGanVN7hL2' || uidCookie === 'JWihxFJfoPNUWGlFgoGAgZ0wfyu1') {
+        if (uidCookie && uidCookie === 'l9k2FHAlGwPfEVJlInMGanVN7hL2' || uidCookie === 'JWihxFJfoPNUWGlFgoGAgZ0wfyu1' || uidCookie === 'aURPsEOCPPewgxjYTnUqP0j5uJK2') {
             setUid(uidCookie);
             get(ref(db, "users/")).then((snapshot) => {
                 if (snapshot.exists()) {
