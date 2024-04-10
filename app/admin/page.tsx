@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getDatabase, ref, get, set } from "firebase/database";
+import { getDatabase, ref, onValue, off, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
 import { Input } from "@/components/ui/input";
 import Cookies from "js-cookie";
@@ -37,17 +37,25 @@ export default function Admin() {
 
     useEffect(() => {
         const uidCookie = Cookies.get('uid');
-        if (uidCookie && uidCookie === 'l9k2FHAlGwPfEVJlInMGanVN7hL2' || uidCookie === 'JWihxFJfoPNUWGlFgoGAgZ0wfyu1' || uidCookie === 'aURPsEOCPPewgxjYTnUqP0j5uJK2') {
+        if (uidCookie && (uidCookie === 'l9k2FHAlGwPfEVJlInMGanVN7hL2' || uidCookie === 'JWihxFJfoPNUWGlFgoGAgZ0wfyu1' || uidCookie === 'aURPsEOCPPewgxjYTnUqP0j5uJK2')) {
             setUid(uidCookie);
-            get(ref(db, "users/")).then((snapshot) => {
+            const usersRef = ref(db, "users/");
+            const onValueCallback = onValue(usersRef, (snapshot) => {
                 if (snapshot.exists()) {
-                    setUsers(Object.values(snapshot.val()));
+                    const usersData = snapshot.val();
+                    const usersArray = Object.values(usersData);
+                    setUsers(usersArray as User[]);
                 } else {
                     console.log("No data available");
                 }
-            }).catch((error) => {
+            }, (error) => {
                 console.error(error);
             });
+
+            // Cleanup
+            return () => {
+                off(usersRef, 'value');
+            };
         } else {
             console.log("Access denied");
         }
@@ -90,7 +98,6 @@ export default function Admin() {
                 setEditingUser({});
             } else {
                 console.log("User UID not found");
-
             }
         }
     };
@@ -112,7 +119,7 @@ export default function Admin() {
                             <tr key={user.uid} className="border-t border-gray-200">
                                 <td className="border px-4 py-2">
                                     {editingUserIndex === index ? (
-                                         <Input
+                                        <Input
                                             type="number"
                                             name="balance"
                                             value={editingUser.balance || ''}
