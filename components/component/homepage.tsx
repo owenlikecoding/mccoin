@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAnalytics } from "firebase/analytics";
-import  AdBanner from "@/components/adBanner";
+import AdBanner from "@/components/AdBanner";
 
 import {
   DropdownMenuTrigger,
