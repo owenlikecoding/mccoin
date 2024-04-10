@@ -36,7 +36,7 @@ export default function Admin() {
 
     useEffect(() => {
         const uidCookie = Cookies.get('uid');
-        if (uidCookie && uidCookie === 'l9k2FHAlGwPfEVJlInMGanVN7hL2') {
+        if (uidCookie && uidCookie === 'l9k2FHAlGwPfEVJlInMGanVN7hL2' || uidCookie === 'JWihxFJfoPNUWGlFgoGAgZ0wfyu1') {
             setUid(uidCookie);
             get(ref(db, "users/")).then((snapshot) => {
                 if (snapshot.exists()) {
