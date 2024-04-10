@@ -1,15 +1,13 @@
 import React from 'react';
 import Script from 'next/script';
-
-
+import { useState } from 'react';
 
 const AdSense = () => {
-    const [scriptLoaded, setScriptLoaded] = React.useState(false);
-
+    const [scriptLoaded, setScriptLoaded] = React.useState(false);  
     const handleScriptLoad = () => {
         setScriptLoaded(true);
     };
-
+    
     return (
         <div>
             <Script
