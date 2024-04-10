@@ -36,6 +36,7 @@ const MathGamePage: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState<number>(10); // New state for countdown
   const [questionsAnswered, setQuestionsAnswered] = useState<number>(0); // New state to track questions answered
   const [isCheckAnswerDisabled, setIsCheckAnswerDisabled] = useState<boolean>(false);
+  const [hasRedeemed, setHasRedeemed] = useState<boolean>(false);
 
   useEffect(() => {
     generateNewProblem();
@@ -72,9 +73,10 @@ const MathGamePage: React.FC = () => {
       setTimeout(() => {
         window.location.href = "/dashboard";
       }, 500);
+      setHasRedeemed(true); // Set hasRedeemed to true after redeeming
     });
-
   }
+
 
   const checkAnswer = () => {
     const answer = eval(`${problem.num1} ${problem.operator} ${problem.num2}`);
@@ -142,10 +144,12 @@ const MathGamePage: React.FC = () => {
                 {/* Display final score */}
                 <button
                   onClick={Reedeem}
+                  disabled={hasRedeemed} // Disable the button if hasRedeemed is true
                   className="bg-green-500 hover:bg-green-700 text-black font-bold py-2 px-4 rounded"
                 >
                   Reedeem McCoins
                 </button>
+
               </div>
             )}
           </div>
