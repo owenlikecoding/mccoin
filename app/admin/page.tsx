@@ -59,7 +59,9 @@ export default function Admin() {
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        setEditingUser({ ...editingUser, [name]: value });
+        // Parse the value as a number if the name is 'balance'
+        const parsedValue = name === 'balance' ? parseFloat(value) : value;
+        setEditingUser({ ...editingUser, [name]: parsedValue });
     };
 
     const handleSave = () => {
@@ -70,7 +72,7 @@ export default function Admin() {
                 ...Object.fromEntries(Object.entries(editingUser).filter(([key, value]) => value !== undefined)) as User
             };
             setUsers(updatedUsers);
-    
+
             // Use the uid from the editingUser state
             const userUid = editingUser.uid;
             console.log("User UID: ", userUid);
@@ -82,12 +84,12 @@ export default function Admin() {
                 }).catch((error) => {
                     console.error("Error updating user: ", error);
                 });
-    
+
                 setEditingUserIndex(null);
                 setEditingUser({});
             } else {
                 console.log("User UID not found");
-                
+
             }
         }
     };
