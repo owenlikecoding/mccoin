@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, get, update } from "firebase/database";
-import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
+import { getDatabase, ref, update, get } from "firebase/database";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import Cookies from "js-cookie";
 import {
  CardTitle,
@@ -42,8 +42,6 @@ const storage = getStorage(app);
 
 export default function Component() {
  const [userData, setUserData] = useState<UserData | null>(null);
- const [loading, setLoading] = useState(true);
- const [error, setError] = useState<Error | null>(null);
  const [profilePicture, setProfilePicture] = useState<File | null>(null);
 
  useEffect(() => {
@@ -54,22 +52,39 @@ export default function Component() {
           const userData = snapshot.val();
           if (userData) {
             setUserData(userData);
-            setLoading(false);
           } else {
             console.error("User data not found for uid:", uid);
-            setLoading(false);
           }
         })
         .catch((error) => {
           console.error("Error fetching user data:", error);
-          setError(error);
-          setLoading(false);
         });
     } else {
       console.error("UID is undefined");
       // Handle the case where uid is undefined, e.g., redirect to login page
     }
  }, []);
+
+ const uploadProfilePicture = async () => {
+  const uid = Cookies.get("uid"); // Retrieve UID from cookies
+  if (!uid) {
+    console.error("UID is undefined");
+    // Handle the case where uid is undefined, e.g., redirect to login page
+    return;
+  }
+
+  if (profilePicture) {
+    const profilePictureRef = storageRef(storage, `profile_pictures/${uid}`);
+    await uploadBytes(profilePictureRef, profilePicture).then(() => {
+      console.log("Uploaded a blob or file!");
+      // Generate a download URL for the uploaded file
+      getDownloadURL(profilePictureRef).then((url) => {
+        // Update profile picture URL in Firebase
+        updateUserData(uid, { profile_picture: url });
+      });
+    });
+  }
+};
 
  const saveSettings = async () => {
     const uid = Cookies.get("uid"); // Retrieve UID from cookies
@@ -86,12 +101,7 @@ export default function Component() {
 
       // Upload profile picture if a file is selected
       if (profilePicture) {
-        const profilePictureRef = storageRef(storage, `profile_pictures/${uid}`);
-        await uploadBytes(profilePictureRef, profilePicture).then((snapshot) => {
-          console.log("Uploaded a blob or file!");
-          // Update profile picture URL in Firebase
-          updateUserData(uid, { profile_picture: profilePictureRef.fullPath });
-        });
+        uploadProfilePicture();
       }
     }
  };
@@ -139,7 +149,7 @@ export default function Component() {
                 accept="image/*"
                 onChange={(e) => setProfilePicture(e.target.files?.[0] || null)}
               />
-              <Button onClick={saveSettings}>Upload</Button>
+              <Button onClick={uploadProfilePicture} type="button">Upload</Button>
             </div>
           </div>
         </CardContent>
