@@ -267,11 +267,6 @@ export default function Sidebar() {
                 <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                   {randomGreeting} {username}
                 </h1>
-                <AdBanner
-                  dataAdFormat="auto"
-                  dataFullWidthResponsive={true}
-                  dataAdSlot="4284247248"
-                />
               </div>
               <p className="leading-7 [&:not(:first-child)]:mt-6 font-roboto-mono">
                 You have <span className="font-semibold" >{balance}</span>{" "}
@@ -286,6 +281,11 @@ export default function Sidebar() {
               <Button color="primary" onClick={toggle} className="m-1">
                 Show Recent Transactions
               </Button>
+              <AdBanner
+                  dataAdFormat="auto"
+                  dataFullWidthResponsive={true}
+                  dataAdSlot="4284247248"
+                />
 
               <Modal isOpen={modal} toggle={toggle} className="flex items-center justify-center min-h-screen">
                 <div className="bg-zinc-500 p-6 rounded shadow-lg">
