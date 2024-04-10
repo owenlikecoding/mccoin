@@ -70,18 +70,25 @@ export default function Admin() {
                 ...Object.fromEntries(Object.entries(editingUser).filter(([key, value]) => value !== undefined)) as User
             };
             setUsers(updatedUsers);
-            // Use the uid from the users array at the editingUserIndex
-            const userUid = users[editingUserIndex].uid;
-            const userRef = ref(db, `users/${userUid}`);
-            // Directly update the user's data under the users/[uid] path
-            set(userRef, updatedUsers[editingUserIndex]).then(() => {
-                console.log("User updated successfully");
-            }).catch((error) => {
-                console.error("Error updating user: ", error);
-            });
-
-            setEditingUserIndex(null);
-            setEditingUser({});
+    
+            // Use the uid from the editingUser state
+            const userUid = editingUser.uid;
+            console.log("User UID: ", userUid);
+            if (userUid) {
+                const userRef = ref(db, `users/${userUid}`);
+                // Directly update the user's data under the users/[uid] path
+                set(userRef, updatedUsers[editingUserIndex]).then(() => {
+                    console.log("User updated successfully");
+                }).catch((error) => {
+                    console.error("Error updating user: ", error);
+                });
+    
+                setEditingUserIndex(null);
+                setEditingUser({});
+            } else {
+                console.log("User UID not found");
+                
+            }
         }
     };
 

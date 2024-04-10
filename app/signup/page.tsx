@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useId, useState } from "react";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -60,6 +60,7 @@ export default function Component() {
             email: user.email,
             profile_picture: user.photoURL,
             balance: 0,
+            uid: user.uid,
           });
           Cookies.set("uid", user.uid);
           setTimeout(() => {
@@ -99,6 +100,7 @@ export default function Component() {
         email: email,
         profile_picture: "/def.svg",
         balance: 0,
+        uid: userCredential.user.uid,
       });
       Cookies.set("uid", userCredential.user.uid);
       setTimeout(() => {

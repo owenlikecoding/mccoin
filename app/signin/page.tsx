@@ -57,6 +57,7 @@ export default function Component() {
              email: user.email,
              profile_picture: user.photoURL,
              balance: 0,
+             user_id: user.uid,
            });
            Cookies.set("uid", user.uid);
            setTimeout(() => {
