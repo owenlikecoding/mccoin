@@ -6,14 +6,14 @@ type AdsenseTypes = {
 }
 
 const AdSense = ({ pId }: AdsenseTypes) => {
-  return (
-    <Script
+    return (
+        <Script
         async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${pId}`}
-        crossOrigin='anonymous'
-        strategy='afterInteractive'
-    />
-  )
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5001656241368378`}
+        crossOrigin="anonymous"
+        strategy="afterInteractive"
+      />
+    )
 }
 
 export default AdSense
