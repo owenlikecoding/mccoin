@@ -65,8 +65,15 @@ export default function Admin() {
     const handleSave = () => {
         if (editingUserIndex !== null) {
             const updatedUsers = [...users];
-            updatedUsers[editingUserIndex] = { ...updatedUsers[editingUserIndex], ...Object.fromEntries(Object.entries(editingUser).filter(([key, value]) => value !== undefined)) as User };            setUsers(updatedUsers);
-            const userRef = ref(db, `users/${users[editingUserIndex].uid}`);
+            updatedUsers[editingUserIndex] = {
+                ...updatedUsers[editingUserIndex],
+                ...Object.fromEntries(Object.entries(editingUser).filter(([key, value]) => value !== undefined)) as User
+            };
+            setUsers(updatedUsers);
+            // Use the uid from the users array at the editingUserIndex
+            const userUid = users[editingUserIndex].uid;
+            const userRef = ref(db, `users/${userUid}`);
+            // Directly update the user's data under the users/[uid] path
             set(userRef, updatedUsers[editingUserIndex]).then(() => {
                 console.log("User updated successfully");
             }).catch((error) => {

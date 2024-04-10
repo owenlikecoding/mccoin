@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAnalytics } from "firebase/analytics";
-import AdBanner from "@/components/AdBanner";
 
 import {
   DropdownMenuTrigger,
@@ -281,12 +280,6 @@ export default function Sidebar() {
               <Button color="primary" onClick={toggle} className="m-1">
                 Show Recent Transactions
               </Button>
-              <AdBanner
-                  dataAdFormat="auto"
-                  dataFullWidthResponsive={true}
-                  dataAdSlot="4284247248"
-                />
-
               <Modal isOpen={modal} toggle={toggle} className="flex items-center justify-center min-h-screen">
                 <div className="bg-zinc-500 p-6 rounded shadow-lg">
                   <ModalBody>
