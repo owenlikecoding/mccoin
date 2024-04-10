@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getDatabase, ref, get, set } from "firebase/database";
 import { initializeApp } from "firebase/app";
+import { Input } from "@/components/ui/input";
 import Cookies from "js-cookie";
 
 // Initialize Firebase
@@ -111,7 +112,7 @@ export default function Admin() {
                             <tr key={user.uid} className="border-t border-gray-200">
                                 <td className="border px-4 py-2">
                                     {editingUserIndex === index ? (
-                                        <input
+                                         <Input
                                             type="number"
                                             name="balance"
                                             value={editingUser.balance || ''}
@@ -123,7 +124,7 @@ export default function Admin() {
                                 </td>
                                 <td className="border px-4 py-2">
                                     {editingUserIndex === index ? (
-                                        <input
+                                        <Input
                                             type="text"
                                             name="name"
                                             value={editingUser.name || ''}
@@ -135,7 +136,7 @@ export default function Admin() {
                                 </td>
                                 <td className="border px-4 py-2">
                                     {editingUserIndex === index ? (
-                                        <input
+                                        <Input
                                             type="email"
                                             name="email"
                                             value={editingUser.email || ''}
