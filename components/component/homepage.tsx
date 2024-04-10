@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getAnalytics } from "firebase/analytics";
+import  AdBanner from "@/components/adBanner";
 
 import {
   DropdownMenuTrigger,
@@ -266,6 +267,11 @@ export default function Sidebar() {
                 <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                   {randomGreeting} {username}
                 </h1>
+                <AdBanner
+                  dataAdFormat="auto"
+                  dataFullWidthResponsive={true}
+                  dataAdSlot="4284247248"
+                />
               </div>
               <p className="leading-7 [&:not(:first-child)]:mt-6 font-roboto-mono">
                 You have <span className="font-semibold" >{balance}</span>{" "}
