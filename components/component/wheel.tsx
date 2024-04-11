@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Wheel } from 'react-custom-roulette';
+import dynamic from 'next/dynamic';
+
+const Wheel = dynamic(() => import('react-custom-roulette').then(mod => mod.Wheel), { ssr: false });
+
 import {
     DropdownMenuTrigger,
     DropdownMenuLabel,
