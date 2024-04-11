@@ -28,7 +28,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 import { ResponsiveLine } from "@nivo/line";
 import { ResponsivePie } from "@nivo/pie";
-import { Dice1, Dice5, Dice6, MountainIcon, Menu } from "lucide-react";
+import { Dice1, Dice5, Dice6, MountainIcon, Menu, ShipWheel } from "lucide-react";
 import { getAuth, signOut } from "firebase/auth";
 import Cookies from "js-cookie";
 
@@ -272,6 +272,13 @@ export default function Sidebar() {
               >
                 <Dice5 className="h-4 w-4" />
                 Gamble
+              </Link>
+              <Link
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                href="/wheel"
+              >
+                <ShipWheel className="h-4 w-4" />
+                Wheel
               </Link>
             </nav>
           </div>

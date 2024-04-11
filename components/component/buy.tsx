@@ -28,12 +28,12 @@ import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveScatterPlot } from "@nivo/scatterplot";
 import { ResponsiveLine } from "@nivo/line";
 import { ResponsivePie } from "@nivo/pie";
-import { Dice1, Dice5, Dice6, MountainIcon, Menu } from "lucide-react";
+import { Dice1, Dice5, Dice6, MountainIcon, Menu, ShipWheel } from "lucide-react";
 import { getAuth, signOut } from "firebase/auth";
 import Cookies from "js-cookie";
 
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, get } from "firebase/database";
+import { getDatabase, ref, set, get , update} from "firebase/database";
 
 import { useEffect, useState } from "react";
 
@@ -104,14 +104,19 @@ export default function Sidebar() {
       const userData = snapshot.val();
       if (userData.balance > 250) {
         set(ref(db, "users/" + uid + "/balance"), userData.balance - 250)
-        var randomString = Math.random().toString(36).substring(7);
-        set(ref(db, "purchases/" + randomString), {
-          name: "Lolipop",
-          price: 250,
-          date: new Date().toISOString(),
-          user: username,
-        })
-        alert("Thank You for you purchase of a Lolipop Talk to Owen to get your item")
+        get(ref(db, "currentString/")).then((snapshot) => {
+          const randomString = snapshot.val().pn;
+          update(ref(db, "currentString/"), {
+            pn: parseInt(randomString) - 1,
+          });
+          set(ref(db, "purchases/" + randomString), {
+            name: "Lolipop",
+            price: 250,
+            date: new Date().toISOString(),
+            user: username,
+          })
+          alert("Thank You for you purchase of a Lolipop Talk to Owen to get your item")
+        });
       }
       else {
         alert("You do not have enough money to buy this item")
@@ -127,14 +132,19 @@ export default function Sidebar() {
       const userData = snapshot.val();
       if (userData.balance > 3000) {
         set(ref(db, "users/" + uid + "/balance"), userData.balance - 3000)
-        var randomString = Math.random().toString(36).substring(7);
-        set(ref(db, "purchases/" + randomString), {
-          name: "Coke",
-          price: 3000,
-          date: new Date().toISOString(),
-          user: username,
-        })
-        alert("Thank You for you purchase of a Soda Talk to Owen to get your item")
+        get(ref(db, "currentString/")).then((snapshot) => {
+          const randomString = snapshot.val().pn;
+          update(ref(db, "currentString/"), {
+            pn: parseInt(randomString) - 1,
+          });
+          set(ref(db, "purchases/" + randomString), {
+            name: "Coke",
+            price: 3000,
+            date: new Date().toISOString(),
+            user: username,
+          })
+          alert("Thank You for you purchase of a Coke Talk to Owen to get your item")
+        });
       }
       else {
         alert("You do not have enough money to buy this item")
@@ -233,6 +243,13 @@ export default function Sidebar() {
               >
                 <Dice5 className="h-4 w-4" />
                 Gamble
+              </Link>
+              <Link
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                href="/wheel"
+              >
+                <ShipWheel className="h-4 w-4" />
+                Wheel
               </Link>
             </nav>
           </div>
