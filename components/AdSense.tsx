@@ -1,6 +1,5 @@
 import React from 'react';
 import Script from 'next/script';
-import Head from 'next/head';
 
 // global.d.ts
 declare global {
@@ -23,14 +22,11 @@ const AdSense = () => {
 
     return (
         <>
-            <Head>
-                <Script
+            <div>
+            <Script
                     src="https://acscdn.com/script/aclib.js"
                     strategy="beforeInteractive"
                 />
-            </Head>
-            <div>
-                {/* Your component content */}
             </div>
         </>
     );
