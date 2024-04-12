@@ -72,14 +72,14 @@ const data = [
     { option: '100 McCoins' },
     { option: '50 McCoins' },
     { option: '20 McCoins' },
-    { option: '140 McCoins' },
-    { option: '160 McCoisn' },
+    { option: '90 McCoins' },
+    { option: '120 McCoins' },
     { option: '80 McCoins' },
     { option: '30 McCoins' },
     { option: '70 McCoins' },
-    { option: '150 McCoins' },
+    { option: '100 McCoins' },
     { option: '10 McCoins' },
-    { option: '200 McCoins' },
+    { option: '110 McCoins' },
     { option: '0 McCoins' },
 ];
 

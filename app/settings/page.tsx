@@ -64,7 +64,6 @@ export default function Component() {
       // Handle the case where uid is undefined, e.g., redirect to login page
     }
  }, []);
-
  const uploadProfilePicture = async () => {
   const uid = Cookies.get("uid"); // Retrieve UID from cookies
   if (!uid) {
