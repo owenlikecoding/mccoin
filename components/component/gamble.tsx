@@ -107,7 +107,7 @@ const GambleComponent = () => {
   const gamb = () => {
     if (mcCoins > 0 && multiplier > 0) {
       let sigma = multiplier * 1;
-      let random = Math.floor(Math.random() * 30) + 1; // Changed to 30 for 1 in 30 odds
+      let random = Math.floor(Math.random() * (multiplier * 10)) + 1; // Odds are multiplier times 10
       console.log(random);
       console.log(sigma);
       if (random == sigma) {
@@ -286,7 +286,7 @@ export default function Sidebar() {
       </div>
       <div className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
-        <Link className="lg:hidden" href="/mobileNavbar">
+          <Link className="lg:hidden" href="/mobileNavbar">
             <Menu className="h-6 w-6" />
             <span className="sr-only">Home</span>
           </Link>
@@ -350,7 +350,7 @@ export default function Sidebar() {
               <img src="gamb.jpeg" alt="" width="400" />
               <GambleComponent />
               <p className="text-sm ">
-                Its A 1 and 30 chance
+                The chance of wining is the multiplier times 10
               </p>
             </CardHeader>
           </Card>
