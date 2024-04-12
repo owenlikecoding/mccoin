@@ -67,13 +67,23 @@ const MathGamePage: React.FC = () => {
     const userId = Cookie.get("uid");
     get(ref(db, 'users/' + userId)).then((snapshot) => {
       const data = snapshot.val();
-      const newBalance = parseInt(data.balance, 10) + score;
-      update(ref(db, 'users/' + userId), { balance: newBalance });
-      alert(`You have successfully redeemed ${score} McCoins!`);
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 500);
-      setHasRedeemed(true); // Set hasRedeemed to true after redeeming
+      if (data.multiplier== 1.5) {
+        const newBalance = parseInt(data.balance, 10) + score * 1.5;
+        update(ref(db, 'users/' + userId), { balance: newBalance });
+        alert(`You have successfully redeemed ${score * 1.5} McCoins!`);
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 1500);
+        setHasRedeemed(true); // Set hasRedeemed to true after redeeming
+      } else {
+        const newBalance = parseInt(data.balance, 10) + score;
+        update(ref(db, 'users/' + userId), { balance: newBalance });
+        alert(`You have successfully redeemed ${score} McCoins!`);
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 500);
+        setHasRedeemed(true); // Set hasRedeemed to true after redeeming
+      }
     });
   }
 

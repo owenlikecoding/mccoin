@@ -55,6 +55,8 @@ const GamePage: React.FC = () => {
     };
   }, [db, Cookies.get("uid")]);
 
+  
+
   const initializeGame = () => {
     setGameOver(false);
     setGameStarted(true); // Set gameStarted to true to start the game immediately
@@ -129,6 +131,37 @@ const GamePage: React.FC = () => {
 
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [direction]);
+  useEffect(() => {
+    let touchStartX = 0;
+    let touchEndX = 0;
+   
+    const handleTouchStart = (e: TouchEvent) => {
+       touchStartX = e.touches[0].clientX;
+    };
+   
+    const handleTouchEnd = (e: TouchEvent) => {
+       touchEndX = e.changedTouches[0].clientX;
+       handleSwipe();
+    };
+   
+    const handleSwipe = () => {
+       if (touchEndX < touchStartX) {
+         // Swipe left
+         setDirection({ x: -1, y: 0 });
+       } else if (touchEndX > touchStartX) {
+         // Swipe right
+         setDirection({ x: 1, y: 0 });
+       }
+    };
+   
+    document.addEventListener("touchstart", handleTouchStart);
+    document.addEventListener("touchend", handleTouchEnd);
+   
+    return () => {
+       document.removeEventListener("touchstart", handleTouchStart);
+       document.removeEventListener("touchend", handleTouchEnd);
+    };
+   }, []);
 
   useEffect(() => {
     if (!gameStarted || gameOver) {
@@ -240,14 +273,26 @@ const GamePage: React.FC = () => {
                 onClick={() => {
                   const userId = Cookies.get("uid");
                   get(ref(db, `users/${userId}`)).then((snapshot) => {
-                    var currentMcCoins = snapshot.val().balance;
-                    update(ref(db, `users/${userId}`), {
-                      balance: parseInt(currentMcCoins) + score,
-                    });
-                    setScore(0);
-                    setTimeout(() => {
-                      initializeGame();
-                    });
+                    if (snapshot.val().multiplier == 1.5) {
+                      var currentMcCoins = snapshot.val().balance;
+                      update(ref(db, `users/${userId}`), {
+                        balance: parseInt(currentMcCoins) + score * 1.5,
+                      });
+                      setScore(0);
+                      setTimeout(() => {
+                        initializeGame();
+                      });
+                    }
+                    else {
+                      var currentMcCoins = snapshot.val().balance;
+                      update(ref(db, `users/${userId}`), {
+                        balance: parseInt(currentMcCoins) + score,
+                      });
+                      setScore(0);
+                      setTimeout(() => {
+                        initializeGame();
+                      });
+                    }
                   });
                 }}
                 className="bg-green-500 hover:bg-green-700 text-black font-bold py-2 px-4 rounded"

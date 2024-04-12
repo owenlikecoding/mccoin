@@ -33,7 +33,7 @@ import { getAuth, signOut } from "firebase/auth";
 import Cookies from "js-cookie";
 
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, get , update} from "firebase/database";
+import { getDatabase, ref, set, get, update } from "firebase/database";
 
 import { useEffect, useState } from "react";
 
@@ -97,6 +97,27 @@ export default function Sidebar() {
     } catch (error) {
       console.error("Error signing out:", error);
     }
+  };
+
+  const buyMulti = () => {
+    get(ref(db, "users/" + uid)).then((snapshot) => {
+      const userData = snapshot.val();
+      const balance = userData.balance;
+      if (balance >= 7000) {
+        update(ref(db, "users/" + uid), {
+          balance: balance - 7000,
+          multiplier: 1.5
+        });
+        alert("Purchase successful.");
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 500);
+      }
+      else {
+        alert("Not enough McCoins.");
+      }
+
+    });
   };
 
   const buyLolipop = () => {
@@ -257,7 +278,7 @@ export default function Sidebar() {
       </div>
       <div className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
-        <Link className="lg:hidden" href="/mobileNavbar">
+          <Link className="lg:hidden" href="/mobileNavbar">
             <Menu className="h-6 w-6" />
             <span className="sr-only">Home</span>
           </Link>
@@ -350,6 +371,24 @@ export default function Sidebar() {
                   <Button
                     className="mt-4"
                     onClick={buyCoke}
+                  >
+                    Buy
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>1.5 Times Multiplier</CardTitle>
+                  <p>7000 McCoins</p>
+                </CardHeader>
+                <CardContent>
+                  <img src="/money.png" style={{ width: '300px', height: '170px' }} />
+                  <CardDescription>
+                   Money Multiplier
+                  </CardDescription>
+                  <Button
+                    className="mt-4"
+                    onClick={buyMulti}
                   >
                     Buy
                   </Button>
