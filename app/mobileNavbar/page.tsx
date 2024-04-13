@@ -8,7 +8,7 @@ export default function MobileNav() {
                     <Link href="/dashboard"><span>Dashboard</span></Link>
                 </li>
                 <li className="hover-scale">
-                    <Link href="/buy"><span>Buy McCoins</span></Link>   
+                    <Link href="/shop"><span>Buy McCoins</span></Link>   
                 </li>
                 <li className="hover-scale">
                     <Link href="/game"><span>Game</span></Link>
