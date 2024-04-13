@@ -1,101 +1,142 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from 'react'
+import { Dialog } from '@headlessui/react'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
-// Assuming Input and Button components are already optimized for Tailwind CSS
-import { useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import Cookies from "js-cookie";
 
-interface MountainIconProps extends React.SVGProps<SVGSVGElement> {}
+export default function Example() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-export default function Component() {
-  useEffect(() => {
-    const user = Cookies.get("uid");
-    if (user != null) {
-      window.location.href = "/dashboard";
-    }
-  }, []);
   return (
-    <div className="flex flex-col min-h-screen">
-      {" "}
-      {/* Use min-h-screen for full viewport height */}
-      <header className="px-4 lg:px-6 h-14 flex items-center">
-        <Link href="#" className="flex items-center justify-center">
-          <MountainIcon className="h-6 w-6" aria-hidden="true" />
-          <span className="sr-only">McCoin Inc 1.0</span>
-        </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          {/* Use Tailwind CSS for styling links */}
-          <Link
-            href="/signup"
-            className="text-sm font-medium hover:text-opacity-75"
-          >
-            Sign Up
-          </Link>
-          <Link
-            href="/signin"
-            className="text-sm font-medium hover:text-opacity-75"
-          >
-            Log In
-          </Link>
+    <div className="bg-white h-[100vh]">
+      <header className="absolute inset-x-0 top-0 z-50">
+        <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+          <div className="flex lg:flex-1">
+            <a href="#" className="-m-1.5 p-1.5">
+              <span className="sr-only">McCoin</span>
+              <img
+                className="h-8 w-auto"
+                src="./favicon.ico"
+                alt=""
+              />
+            </a>
+          </div>
+          <div className="flex lg:hidden">
+            <button
+              type="button"
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <span className="sr-only">Open main menu</span>
+              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            </button>
+          </div>
+          <div className="hidden lg:flex lg:gap-x-12">
+
+          </div>
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+            <a href="/signin " className="text-sm font-semibold leading-6 text-gray-900">
+              Log in <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
         </nav>
-      </header>
-      <main className="flex-1 flex justify-center">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-          <div className="container mx-auto flex flex-col items-center justify-center space-y-4 px-4 md:px-6">
-            <div className="flex items-center justify-center">
-              <div className="text-center space-y-2">
-                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                  The Digital {""}
-                  <span className="bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-transparent">
-                    Currency
-                  </span>{" "}
-                  Of Innovation
-                </h1>
-                <p className="mx-auto max-w-prose text-gray-500 text-base md:text-lg dark:text-gray-400">
-                  The simplist way to enter cyptocurrency. Without the crypto
-                  side.
-                </p>
+        <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
+          <div className="fixed inset-0 z-50" />
+          <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+            <div className="flex items-center justify-between">
+              <a href="#" className="-m-1.5 p-1.5">
+                <span className="sr-only">Your Company</span>
+                <img
+                  className="h-8 w-auto"
+                  src="./favicon.ico"
+                  alt=""
+                />
+              </a>
+              <button
+                type="button"
+                className="-m-2.5 rounded-md p-2.5 text-gray-700"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span className="sr-only">Close menu</span>
+                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </div>
+            <div className="mt-6 flow-root">
+              <div className="-my-6 divide-y divide-gray-500/10">
+                <div className="space-y-2 py-6">
+
+                </div>
+                <div className="py-6">
+                  <a
+                    href="/signin"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    Log in
+                  </a>
+                </div>
               </div>
             </div>
-            <form className="w-full max-w-md flex flex-col md:flex-row gap-4 justify-center items-center">
-              <Link href="/signup">
-                <Button type="submit">Get Started</Button>
-              </Link>
-            </form>
-          </div>
-        </section>
-      </main>
-      <footer className="py-6 w-full border-t">
-        <div className="flex flex-col sm:flex-row justify-between items-center px-4 md:px-6">
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            © 2024 McCoin Inc. All rights reserved.
-          </p>
-          <nav className="flex gap-4 mt-4 sm:mt-0">
-            <Link href="/tos" className="text-xs hover:text-opacity-75">
-              Terms of Service
-            </Link>
-          </nav>
-        </div>
-      </footer>
-    </div>
-  );
-}
+          </Dialog.Panel>
+        </Dialog>
+      </header>
 
-function MountainIcon(props: MountainIconProps) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
-    </svg>
-  );
+      <div className="relative isolate px-6 pt-14 lg:px-8">
+        <div
+          className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+          aria-hidden="true"
+        >
+          <div
+            className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+            style={{
+              clipPath:
+                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+            }}
+          />
+        </div>
+        <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+          <div className="hidden sm:mb-8 sm:flex sm:justify-center">
+            <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+              Please give us money{' '}
+              <a href="https://buy.stripe.com/eVaaIn28v3Gk8nudQQ" className="font-semibold text-indigo-600">
+                <span className="absolute inset-0" aria-hidden="true" />
+                Read more <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </div>
+          <div className="text-center">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+              The Dumbest Yet Smartest Crypto Out There
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Crypto is cool but confusing, Our Solution is making a cryprto that is so dumb that it is smart.{' '}
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <a
+                href="#"
+                className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Get started
+              </a>
+              <a href="/signin" className="text-sm font-semibold leading-6 text-gray-900">
+                Login <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+          aria-hidden="true"
+        >
+          <div
+            className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+            style={{
+              clipPath:
+                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  )
 }
