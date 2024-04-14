@@ -25,16 +25,9 @@ interface MathProblem {
   operator: string;
 }
 
-useEffect(() => {
-  if (typeof window !== 'undefined') {
-     window.aclib.runAutoTag({
-       zoneId: 'abmvkgjtfs',
-     });
-  }
- }, []);
-
 
 const MathGamePage: React.FC = () => {
+
   const [problem, setProblem] = useState<MathProblem>({
     num1: 0,
     num2: 0,
@@ -51,6 +44,15 @@ const MathGamePage: React.FC = () => {
     generateNewProblem();
     startCountdown();
   }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.aclib.runAutoTag({
+        zoneId: 'abmvkgjtfs',
+      });
+    }
+  }, []);
+
 
   const generateNewProblem = () => {
     const operators = ["+", "-", "*", "/"];
@@ -76,7 +78,7 @@ const MathGamePage: React.FC = () => {
     const userId = Cookie.get("uid");
     get(ref(db, 'users/' + userId)).then((snapshot) => {
       const data = snapshot.val();
-      if (data.multiplier== 1.5) {
+      if (data.multiplier == 1.5) {
         const newBalance = parseInt(data.balance, 10) + score * 1.5;
         update(ref(db, 'users/' + userId), { balance: newBalance });
         alert(`You have successfully redeemed ${score * 1.5} McCoins!`);

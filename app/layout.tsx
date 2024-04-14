@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+        <Script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js" strategy="afterInteractive" ></Script>
 
         <AdSense />
         {children}
