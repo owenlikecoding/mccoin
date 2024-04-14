@@ -47,6 +47,12 @@ import {
   ModalHeader,
 } from "reactstrap";
 
+declare global {
+  interface Window {
+     aclib: any; // Replace 'any' with a more specific type if you know the structure of 'aclib'
+  }
+ }
+
 import { RecentTransactions } from "./recentTransactions";
 import { Roboto_Mono } from "next/font/google";
 
@@ -117,6 +123,14 @@ export default function Sidebar() {
       console.error("Error signing out:", error);
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+       window.aclib.runAutoTag({
+         zoneId: 'abmvkgjtfs',
+       });
+    }
+   }, []);
 
   useEffect(() => {
     const uid = Cookies.get("uid");

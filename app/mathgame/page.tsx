@@ -25,6 +25,15 @@ interface MathProblem {
   operator: string;
 }
 
+useEffect(() => {
+  if (typeof window !== 'undefined') {
+     window.aclib.runAutoTag({
+       zoneId: 'abmvkgjtfs',
+     });
+  }
+ }, []);
+
+
 const MathGamePage: React.FC = () => {
   const [problem, setProblem] = useState<MathProblem>({
     num1: 0,
