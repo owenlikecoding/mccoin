@@ -137,6 +137,9 @@ export default function Sidebar() {
             user: username,
           })
           alert("Thank You for you purchase of a Lolipop Talk to Owen to get your item")
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 500);
         });
       }
       else {
@@ -165,6 +168,9 @@ export default function Sidebar() {
             user: username,
           })
           alert("Thank You for you purchase of a Coke Talk to Owen to get your item")
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 500);
         });
       }
       else {
