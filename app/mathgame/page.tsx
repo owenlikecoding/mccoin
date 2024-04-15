@@ -45,15 +45,6 @@ const MathGamePage: React.FC = () => {
     startCountdown();
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.aclib.runAutoTag({
-        zoneId: 'abmvkgjtfs',
-      });
-    }
-  }, []);
-
-
   const generateNewProblem = () => {
     const operators = ["+", "-", "*", "/"];
     const operator = operators[Math.floor(Math.random() * operators.length)];

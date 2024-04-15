@@ -125,14 +125,6 @@ export default function Sidebar() {
   };
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-       window.aclib.runAutoTag({
-         zoneId: 'abmvkgjtfs',
-       });
-    }
-   }, []);
-
-  useEffect(() => {
     const uid = Cookies.get("uid");
     if (uid) {
       setLoading(true); // Set loading to true before fetching data

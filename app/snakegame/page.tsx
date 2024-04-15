@@ -75,15 +75,6 @@ const GamePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-       window.aclib.runAutoTag({
-         zoneId: 'abmvkgjtfs',
-       });
-    }
-   }, []);
-
-
-  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       setGameStarted(true);
       switch (e.key) {
