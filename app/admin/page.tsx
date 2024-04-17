@@ -74,31 +74,40 @@ export default function Admin() {
     };
 
     const handleSave = () => {
-        if (editingUserIndex !== null) {
-            const updatedUsers = [...users];
-            updatedUsers[editingUserIndex] = {
-                ...updatedUsers[editingUserIndex],
-                ...Object.fromEntries(Object.entries(editingUser).filter(([key, value]) => value !== undefined)) as User
-            };
-            setUsers(updatedUsers);
-
-            // Use the uid from the editingUser state
-            const userUid = editingUser.uid;
-            console.log("User UID: ", userUid);
-            if (userUid) {
-                const userRef = ref(db, `users/${userUid}`);
-                // Directly update the user's data under the users/[uid] path
-                set(userRef, updatedUsers[editingUserIndex]).then(() => {
-                    console.log("User updated successfully");
-                }).catch((error) => {
-                    console.error("Error updating user: ", error);
-                });
-
-                setEditingUserIndex(null);
-                setEditingUser({});
-            } else {
-                console.log("User UID not found");
+        // Step 1: Prompt the user for the 2SA number
+        const authNumber = prompt("Please enter the 2SA number:");
+    
+        // Step 2: Validate the input
+        if (authNumber === "224567") {
+            if (editingUserIndex !== null) {
+                const updatedUsers = [...users];
+                updatedUsers[editingUserIndex] = {
+                    ...updatedUsers[editingUserIndex],
+                    ...Object.fromEntries(Object.entries(editingUser).filter(([key, value]) => value !== undefined)) as User
+                };
+                setUsers(updatedUsers);
+    
+                // Use the uid from the editingUser state
+                const userUid = editingUser.uid;
+                console.log("User UID: ", userUid);
+                if (userUid) {
+                    const userRef = ref(db, `users/${userUid}`);
+                    // Directly update the user's data under the users/[uid] path
+                    set(userRef, updatedUsers[editingUserIndex]).then(() => {
+                        console.log("User updated successfully");
+                    }).catch((error) => {
+                        console.error("Error updating user: ", error);
+                    });
+    
+                    setEditingUserIndex(null);
+                    setEditingUser({});
+                } else {
+                    console.log("User UID not found");
+                }
             }
+        } else {
+            // Show an error message if the number is incorrect
+            alert("Incorrect 2SA number. Please try again.");
         }
     };
 
