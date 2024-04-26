@@ -1,15 +1,25 @@
 "use client";
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+
+const buyMccoin = () => {
+  alert("We Are Selling The CompanyMcCoin!, You heard that right if you would like more info talk to owen.")
+}
+
+
 
 
 export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
+  useEffect(() => {
+    buyMccoin()
+  })
+
   return (
-    <div className="bg-white h-[100vh]">
+    <div className=" h-[100vh]">
       <header className="absolute inset-x-0 top-0 z-50">
         <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
           <div className="flex lg:flex-1">
@@ -36,7 +46,7 @@ export default function Example() {
 
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="/signin " className="text-sm font-semibold leading-6 text-gray-900">
+            <a href="/signin " className="text-sm font-semibold leading-6 text-white">
               Log in <span aria-hidden="true">&rarr;</span>
             </a>
           </div>
@@ -46,7 +56,7 @@ export default function Example() {
           <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 p-1.5">
-                <span className="sr-only">Your Company</span>
+                <span className="sr-only">McCoin</span>
                 <img
                   className="h-8 w-auto"
                   src="./favicon.ico"
@@ -105,7 +115,7 @@ export default function Example() {
             </div>
           </div>
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
               The Dumbest Yet Smartest Crypto Out There
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
@@ -118,7 +128,7 @@ export default function Example() {
               >
                 Get started
               </a>
-              <a href="/signin" className="text-sm font-semibold leading-6 text-gray-900">
+              <a href="/signin" className="text-sm font-semibold leading-6 text-white">
                 Login <span aria-hidden="true">→</span>
               </a>
             </div>
