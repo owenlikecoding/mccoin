@@ -354,7 +354,7 @@ export default function Sidebar() {
                 <CardContent>
                   <img src="/lol.jpeg" />
                   <CardDescription>
-                    Deliciuos chiniseium lollipop
+                    Deliciuos Brithishisium Lollipop
                   </CardDescription>
                   <Button
                     className="mt-4"
